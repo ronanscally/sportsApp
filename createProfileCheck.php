@@ -1,18 +1,18 @@
 <?php
-    // Test script to verify checkUser.php
+    // Test script to verify createUser.php
     // 
-    // Normally the app will send userID in a JSON object, straight to checkUser.php
+    // Normally the app will send userID in a JSON object, straight to createUser.php
 
     include 'postData.php';
-    $destination = 'http://localhost/checkUser.php';
+    $destination = 'http://localhost/software/createProfile.php';
     
     // Generate JSON object
     // Look up details in DB for this user ID
     $data = array (
-        "userID"    => "1234567800",
-        // "firstName" => "Ronan",
-        // "lastName"  => "Scally",
-        // "dob"       => "1991-06-14",
+        "userID"    => "12345678",
+        "firstName" => "Ronan",
+        "lastName"  => "Scally",
+        "dob"       => "1991-06-14",
     );                                                                    
     
     // Encode JSON data

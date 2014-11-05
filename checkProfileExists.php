@@ -1,6 +1,6 @@
 <?php
  
-// checkUser.php
+// checkProfileExists.php
 //
 // Checks if there is an entry in the database for the input user ID, which is in a JSON object, 
 // sent via a HTTP POST request
@@ -27,41 +27,29 @@
         $query = 'SELECT * FROM `profiles` WHERE userID='.$userID;
         $result = mysqli_query($connection->myconn, $query);
         
-        // Check if row exists or not
-        if ($result) {
-            // Fetch each row (should only be 1)
-            while ($row = mysqli_fetch_assoc($result)) {
-                // Get details
-                $firstName  = $row['firstName'];
-                $lastName   = $row['lastName'];
-                $dob        = $row['dob'];
-                $userID     = $row['userID'];
-                
-                // // Print details
-                // echo 'Name: ', $firstName, ' ', $lastName, '. <br />';
-                // echo 'DOB = ', $dob, '. ';
-                // echo 'User ID = ', $userID, '. <br />';
-                
-                // Create JSON object
-                $response = array (
-                    "success"   => "1",
-                    "message"   => NULL,
-                    "userID"    => $userID,
-                    "firstName" => $firstName,
-                    "lastName"  => $lastName,
-                    "dob"       => $dob,
-                );
-                
-            }
+        // Fetch each row (should only be 1)
+        if ($row = mysqli_fetch_assoc($result)) {
+            // Get details
+            $firstName  = $row['firstName'];
+            $lastName   = $row['lastName'];
+            $dob        = $row['dob'];
+            $userID     = $row['userID'];
+            
+            // Create JSON object
+            $response = array (
+                "success"   => "1",
+                "message"   => "Users profile exists. ",
+                "userID"    => $userID,
+                "firstName" => $firstName,
+                "lastName"  => $lastName,
+                "dob"       => $dob,
+            );            
+        }
         // If row does not exist, return -1 to tell app to prompt user for details
-        } else {
+        else {
             $response = array (
                 "success"   => "-1",
                 "message"   => "No database entry for this user, prompt for profile creation",
-                "userID"    => NULL,
-                "firstName" => NULL,
-                "lastName"  => NULL,
-                "dob"       => NULL,
             );
         }
     } 
