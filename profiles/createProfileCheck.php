@@ -3,8 +3,8 @@
     //
     // Normally the app will send userID in a JSON object, straight to createUser.php
 
-    include 'postData.php';
-    $destination = 'http://csiserver.ucd.ie/~09333541/sportsapp/createProfile.php';
+    include '../postData.php';
+    $destination = 'http://csiserver.ucd.ie/~09333541/sportsapp/profiles/createProfile.php';
 
     // Generate JSON object
     // Look up details in DB for this user ID

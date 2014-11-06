@@ -3,8 +3,8 @@
     //
     // Normally the app will send userID in a JSON object, straight to deleteProfile.php
 
-    include 'postData.php';
-    $destination = 'http://csiserver.ucd.ie/~09333541/sportsapp/deleteProfile.php';
+    include '../postData.php';
+    $destination = 'http://csiserver.ucd.ie/~09333541/sportsapp/profiles/deleteProfile.php';
 
     // Generate JSON object
     // Look up details in DB for this user ID

@@ -8,8 +8,8 @@
 // Returns a JSON object
 
     // Include database connection class 
-    include 'dbConnect.php';
-    include 'postData.php';
+    include '../dbConnect.php';
+    include '../postData.php';
 
     // Get JSON POST and decode
     $received = file_get_contents("php://input");
