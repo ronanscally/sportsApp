@@ -1,10 +1,10 @@
 <?php
 
 class createCon  {
-    var $host   = 'localhost';      // host address
-    var $user   = 'root';           // mySQL username
-    var $passwd = '';               // mySQL password
-    var $db     = 'sportsApp';      // mySQL database
+    var $host   = 'csserver.ucd.ie';      // host address
+    var $user   = '09333541';           // mySQL username
+    var $passwd = 'msrqtgj1';               // mySQL password
+    var $db     = '09333541';      // mySQL database
     var $myconn;                    // holds connection
 
     // Connect
