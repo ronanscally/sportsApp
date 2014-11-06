@@ -4,8 +4,7 @@
     // Normally the app will send userID in a JSON object, straight to checkUser.php
 
     include 'postData.php';
-    $destination = 'http://csiserver.ucd.ie/~09333541/public_html/sportsapp/checkProfileExists.php';
-
+    $destination = 'http://csiserver.ucd.ie/~09333541/sportsapp/checkProfileExists.php';
 
     // Generate JSON object
     // Look up details in DB for this user ID
