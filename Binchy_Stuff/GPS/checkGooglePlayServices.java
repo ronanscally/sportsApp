@@ -1,5 +1,17 @@
-public class MainActivity extends FragmentActivity {
-    ...
+package com.Sporty.SportsApp;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+
+public class checkGooglePlayServices extends FragmentActivity {
     // Global constants
     /*
      * Define a request code to send to Google Play services
@@ -7,7 +19,7 @@ public class MainActivity extends FragmentActivity {
      */
     private final static int
             CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    ...
+    
     // Define a DialogFragment that displays the error dialog
     public static class ErrorDialogFragment extends DialogFragment {
         // Global field to contain the error dialog
@@ -27,7 +39,7 @@ public class MainActivity extends FragmentActivity {
             return mDialog;
         }
     }
-    ...
+    
     /*
      * Handle results returned to the FragmentActivity
      * by Google Play services
@@ -37,7 +49,6 @@ public class MainActivity extends FragmentActivity {
             int requestCode, int resultCode, Intent data) {
         // Decide what to do based on the original request code
         switch (requestCode) {
-            ...
             case CONNECTION_FAILURE_RESOLUTION_REQUEST :
             /*
              * If the result code is Activity.RESULT_OK, try
@@ -48,13 +59,10 @@ public class MainActivity extends FragmentActivity {
                     /*
                      * Try the request again
                      */
-                    ...
                     break;
                 }
-            ...
         }
      }
-    ...
     private boolean servicesConnected() {
         // Check that Google Play services is available
         int resultCode =
@@ -89,5 +97,4 @@ public class MainActivity extends FragmentActivity {
             }
         }
     }
-    ...
 }
