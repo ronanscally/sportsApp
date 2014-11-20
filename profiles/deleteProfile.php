@@ -23,7 +23,10 @@
         $connection->connect();
 
         // Mysql delete row with matched id
-        $query = 'DELETE FROM `profiles` WHERE userID = '.$userID.';';
+        $query  = 'DELETE `profiles`, `userLocationSpatial` ';
+        $query .= 'FROM `profiles` ';
+        $query .= 'INNER JOIN `userLocationSpatial` on profiles.userID=userLocationSpatial.userID ';
+        $query .= 'WHERE profiles.userID='.$userID.' ';
         $result = mysqli_query($connection->myconn, $query);
 
         // Check if row exists or not
@@ -53,11 +56,6 @@
     // echoing JSON response
     echo json_encode($response);
 
-    // $encodedResp = json_encode($response);
-
-    // Check JSON object
-    // var_dump(json_decode($encodedResp, true));
-
-    // Send JSON object
-    // echo $encodedResp;
+    // Close connection
+    $connection->close();
 ?>

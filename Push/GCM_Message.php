@@ -1,7 +1,7 @@
 <?php
 
 //------------------------------
-// Payload data you want to send 
+// Payload data you want to send
 // to Android device (will be
 // accessible via intent extras)
 //------------------------------
@@ -12,12 +12,12 @@ $data = array( 'message' => 'Hello World!' );
 // The recipient registration IDs
 // that will receive the push
 // (Should be stored in your DB)
-// 
+//
 // Read about it here:
 // http://developer.android.com/google/gcm/
 //------------------------------
 
-$ids = array( 'abc', 'def' );
+$ids = array('APA91bGKqpr8ZSQO0E7vSWP45WTa9kZQQ28Y9_jjKlDIzC6CPa1pQYWu8MfGZfgSLy-nkc_lAE3tPIlKKTpH7TNRJVL6o5PsfM8hQ4wBMS8pL-Zahj1VdRxljMtw68q6Pk-8b3XfkEEHLIEZGNy16E-iljSlrr99EQ');
 
 //------------------------------
 // Call our custom GCM function
@@ -32,13 +32,13 @@ sendGoogleCloudMessage(  $data, $ids );
 function sendGoogleCloudMessage( $data, $ids )
 {
     //------------------------------
-    // Replace with real GCM API 
+    // Replace with real GCM API
     // key from Google APIs Console
-    // 
+    //
     // https://code.google.com/apis/console/
     //------------------------------
 
-    $apiKey = 'abc';
+    $apiKey = 'AIzaSyAdE3CE9NUqwWxO3lKFZa_7dNaWO2psjoY';
 
     //------------------------------
     // Define URL to GCM endpoint
@@ -61,7 +61,7 @@ function sendGoogleCloudMessage( $data, $ids )
     // (Authentication and type)
     //------------------------------
 
-    $headers = array( 
+    $headers = array(
                         'Authorization: key=' . $apiKey,
                         'Content-Type: application/json'
                     );
@@ -91,7 +91,7 @@ function sendGoogleCloudMessage( $data, $ids )
     curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
 
     //------------------------------
-    // Get the response back as 
+    // Get the response back as
     // string instead of printing it
     //------------------------------
 

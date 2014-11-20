@@ -60,12 +60,15 @@
     }
 
     // Add location data
-    if ($decoded['xlocation'] && $decoded['ylocation']) {
-      $xLocation = $decoded['xlocation'];
-      $yLocation = $decoded['ylocation'];
+    if ($decoded['lng'] && $decoded['lat']) {
+      $lng = $decoded['lng'];
+      $lat = $decoded['lat'];
 
       // mySQL add user to database
-      $query = 'UPDATE eventLocation SET location = GEOMFROMTEXT(\'POINT('.$xLocation.' '.$yLocation.')\', 0) WHERE eventID = '.$eventID.';';
+      $query = 'UPDATE eventLocation SET `location`=GEOMFROMTEXT(\'POINT('.$lng.' '.$lat.')\', 0 ) WHERE eventID='.$eventID.';';
+      $result = mysqli_query($connection->myconn, $query);
+
+      $query = 'UPDATE eventCoords SET `lng`='.$lng.', `lat`='.$lat.' WHERE eventID='.$eventID.';';
       $result = mysqli_query($connection->myconn, $query);
 
       // Check if successful

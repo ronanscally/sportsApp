@@ -1,8 +1,8 @@
 <?php
 
-// deleteProfile.php
+// addDevice.php
 //
-// Deletes the users details from the database
+// Adds a device in the database for a user
 //
 // Returns a JSON object
 
@@ -11,42 +11,39 @@
     include '../postData.php';
 
     // Get JSON POST and decode
-    $received = file_get_contents("php://input");
-    $decoded = json_decode($received, true);
+    $received   = file_get_contents("php://input");
+    $decoded    = json_decode($received, true);
 
     // Connect to database
     $connection = new createCon();
     $connection->connect();
 
     // Check for required fields
-    if ($decoded['eventID']) {
-        $eventID = $decoded['eventID'];
+    if ($decoded['userID'] && $decoded['deviceID']) {
+        $userID   = $decoded['userID'];
+        $deviceID = $decoded['deviceID'];
 
-        // Mysql delete row with matched id
-        $query  = 'DELETE `events`, `eventLocation` ';
-        $query .= 'FROM `events` ';
-        $query .= 'INNER JOIN `eventLocation` on events.eventID=eventLocation.eventID ';
-        $query .= 'WHERE events.eventID='.$eventID.' ';
-
+        // mySQL add user to database
+        $query = 'INSERT INTO userDevices(userID, device) VALUES ('.$userID.',\''.$deviceID.'\')';
         $result = mysqli_query($connection->myconn, $query);
 
-        // Check if row exists or not
-        if (mysqli_affected_rows($connection->myconn)) {
+        // Check if successful
+        if ($result) {
             // Create JSON object
             $response[] = array (
                 "success"   => "1",
-                "message"   => "Event successfully deleted. ",
+                "message"   => "Device successfully added. ",
             );
-        // If row does not exist, return -1
         } else {
             $response[] = array (
                 "success"   => "-1",
-                "message"   => "No database entry for this event. ",
+                "message"   => "Unable to add device. ",
             );
         }
     }
-    // If no event field in JSON object
+    // If not enough fields in JSON object
     else {
+        // required field is missing
         $response[] = array (
             "success" => "0",
             "message" => "Required field(s) is missing",

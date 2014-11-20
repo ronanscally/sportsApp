@@ -64,12 +64,32 @@
     }
 
     // Add location data
-    if ($decoded['xlocation'] && $decoded['ylocation']) {
-      $xLocation = $decoded['xlocation'];
-      $yLocation = $decoded['ylocation'];
+    if ($decoded['lat'] && $decoded['lng']) {
+      $lat = $decoded['lat'];
+      $lng = $decoded['lng'];
 
       // mySQL add user to database
-      $query = 'INSERT INTO eventLocation(eventID, location) VALUES ('.$eventID.',GEOMFROMTEXT(\'POINT('.$xLocation.' '.$yLocation.')\', 0 ));';
+      $query = 'INSERT INTO eventLocation(eventID, location) VALUES ('.$eventID.',GEOMFROMTEXT(\'POINT('.$lng.' '.$lat.')\', 0 ));';
+      $result = mysqli_query($connection->myconn, $query);
+
+      // Check if successful
+      if ($result) {
+          // Create JSON object
+          $response[] = array (
+              "success"   => "1",
+              "message"   => "Location data successfully added. ",
+              "eventID"   => $eventID,
+          );
+      } else {
+          $response[] = array (
+              "success"   => "-1",
+              "message"   => "Unable to add location data to event. ",
+              "eventID"   => $eventID,
+          );
+      }
+
+      // mySQL add user to database
+      $query = 'INSERT INTO eventCoords(eventID, lat, lng) VALUES ('.$eventID.','.$lat.','.$lng.')';
       $result = mysqli_query($connection->myconn, $query);
 
       // Check if successful
