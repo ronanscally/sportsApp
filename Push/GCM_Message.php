@@ -17,7 +17,7 @@ $data = array( 'message' => 'Hello World!' );
 // http://developer.android.com/google/gcm/
 //------------------------------
 
-$ids = array( 'abc', 'def' );
+$ids = array('APA91bHYrC6A04lCW04z_1TaoWxVJ-yWs21Cc9P5XLMsywsYTatQYQUyS7sWOAZFVDESL-MRnKwt8RF4uCEXVN3MuuTE6ojprmcui7ahLvH1Ac8Ubf5DEl2qCeU0hyJbS5pcchKDyTTnSYk7QrA1vSzH-q8NXc3bgw');
 
 //------------------------------
 // Call our custom GCM function
@@ -38,7 +38,7 @@ function sendGoogleCloudMessage( $data, $ids )
     // https://code.google.com/apis/console/
     //------------------------------
 
-    $apiKey = 'abc';
+    $apiKey = 'AIzaSyCg0TnBOzhJqT2SwiwwtF-w134uhSepdDA';
 
     //------------------------------
     // Define URL to GCM endpoint
