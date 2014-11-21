@@ -44,6 +44,8 @@
             );
         }
 
+        $query = 'INSERT INTO friends(friend_1, friend_2, status) VALUES ('.$userID.', '.$userID.', 0);';
+        $result = mysqli_query($connection->myconn, $query);
         $query = 'INSERT INTO userLocation(userID, lat, lng) VALUES ('.$userID.', NULL, NULL);';
         $result = mysqli_query($connection->myconn, $query);
         $query = 'INSERT INTO userLocationSpatial(userID, location)  VALUES ('.$userID.',GEOMFROMTEXT(\'POINT(0 0)\', 0 ));';

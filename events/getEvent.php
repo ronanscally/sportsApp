@@ -24,9 +24,10 @@
       $eventID = $decoded['eventID'];
 
       // mySQL get records
-      $query =  'SELECT events.dateTime, events.peopleRequired, events.peopleAttending, events.hostID, events.title, events.sport, AsWKT(eventLocation.location) ';
+      $query =  'SELECT events.dateTime, events.peopleRequired, events.peopleAttending, events.hostID, events.title, events.sport, AsWKT(eventLocation.location), sports.sportID ';
       $query .= 'FROM  `events` ';
       $query .= 'INNER JOIN  `eventLocation` ON eventLocation.eventID = events.eventID ';
+      $query .= 'INNER JOIN  `sports` ON events.sport = sports.sport ';
       $query .= 'WHERE events.eventID='.$eventID.' ';
       $query .= 'ORDER BY (events.dateTime) ASC ';
 
@@ -44,6 +45,7 @@
           $location = $row['AsWKT(eventLocation.location)'];
           // $attending = $row['attendingStatus'];
           $sport    = $row['sport'];
+          $sportID  = $row['sportID'];
 
           $coords = decodePoint($location);
 
@@ -61,6 +63,7 @@
               "yCoord"    => $coords[1],
               "attnStatus"=> $attending,
               "sport"     => $sport,
+              "sportID"   => $sportID,
           );
       } else {
           $response[] = array (

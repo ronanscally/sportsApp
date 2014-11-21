@@ -38,17 +38,21 @@
         $event[] = $row['eventID'];
     }
 
-    echo 'test';
     $i = 0;
     // For each user, scan through all relevant events sorted by distance occuring in the next hour
     foreach ($user as $thisUser)  {
         $query  = 'SELECT events.title, events.dateTime, events.sport, ';
-        $query .= '( 3959 * acos( cos( radians('.$lat[$i].') ) * cos( radians(eventCoords.lat ) ) * cos( radians( eventCoords.lng ) - radians('.$lng[$i].') ) + sin( radians('.$lat[$i].') ) * sin( radians(eventCoords.lat ) ) ) ) ';
+        // Calculate distance as the crow flies, in km
+        // Could make this return miles, based on the users preference
+        // Limit to one decimal place
+        $query .= '(ROUND( 6371 * acos( cos( radians('.$lat[$i].') ) * cos( radians(eventCoords.lat ) ) * cos( radians( eventCoords.lng ) - radians('.$lng[$i].') ) + sin( radians('.$lat[$i].') ) * sin( radians(eventCoords.lat ) ) ) ,1) ) ';
         $query .= 'AS distance ';
         $query .= 'FROM `events` ';
         $query .= 'INNER JOIN `eventCoords` on events.eventID=eventCoords.eventID ';
+        // Add time constraint
         $query .= 'WHERE events.dateTime > CURRENT_TIMESTAMP() AND events.dateTime <= TIMESTAMPADD(HOUR,1,CURRENT_TIMESTAMP()) ';
-        // $query .= 'HAVING distance < 50 ';     // add distance constraint
+        // This line adds the event distance constraint
+        // $query .= 'HAVING distance < 50 ';
         $query .= 'ORDER BY distance;';
 
         // Execute query and send notification if required
@@ -63,7 +67,6 @@
             sendGoogleCloudMessage($notification, array($device[$i]));
             echo var_dump($notification);
             echo var_dump($device[$i]);
-            echo 'i = '.$i;
         }
         $i++;
     }

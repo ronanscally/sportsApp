@@ -23,14 +23,16 @@
       $userID = $decoded['userID'];
 
       // mySQL get records
-      $query =  'SELECT eventParticipants.eventID, eventParticipants.attendingStatus, events.dateTime, events.sport, events.title, eventLocation.location ';
+      // To return date as dd/mm/yyyy
+      // $query =  'SELECT eventParticipants.eventID, eventParticipants.attendingStatus, (DATE_FORMAT(events.dateTime, '%d/%m/%Y')) AS eventDate, events.sport, events.title, eventLocation.location ';
+      $query =  'SELECT eventParticipants.eventID, eventParticipants.attendingStatus, events.sport, events.title, eventLocation.location, sports.sportID, ';
+      $query .= "(DATE_FORMAT(events.dateTime, '%d/%m/%Y')) AS date, (DATE_FORMAT(events.dateTime, '%H:%i:%s')) AS time, (DATE_FORMAT(events.dateTime, '%W')) AS day ";
       $query .= 'FROM  `eventParticipants` ';
       $query .= 'INNER JOIN  `events`        ON eventParticipants.eventID = events.eventID ';
       $query .= 'INNER JOIN  `eventLocation` ON eventParticipants.eventID = eventLocation.eventID ';
-      $query .= 'WHERE eventParticipants.userID='.$userID.' ';
+      $query .= 'INNER JOIN  `sports` ON events.sport = sports.sport ';
+      $query .= 'WHERE eventParticipants.userID='.$userID.' AND events.dateTime > CURRENT_TIMESTAMP() ';
       $query .= 'ORDER BY (events.dateTime) ASC ';
-
-      // $query .=
       $result = mysqli_query($connection->myconn, $query);
 
       // Check if successful
@@ -39,11 +41,16 @@
           while ($row = mysqli_fetch_assoc($result)) {
               // Get details
               $eventID  = $row['eventID'];
-              $date     = $row['dateTime'];
+              $date     = $row['date'];
+              $time     = $row['time'];
+              $day      = $row['day'];
               $title    = $row['title'];
               $location = $row['location'];
               $sport    = $row['sport'];
+              $sportID  = $row['sportID'];
               $status   = $row['attendingStatus'];
+
+              $date = str_replace('\\', '', $date);
 
               // Create JSON object
               $response[] = array (
@@ -52,8 +59,11 @@
                   "eventID"   => $eventID,
                   "eventName" => $title,
                   "date"      => $date,
+                  "time"       => $time,
+                  "day"      => $day,
                   "location"  => $location,
-                  "sport"  => $sport,
+                  "sport"     => $sport,
+                  "sportID"   => $sportID,
               );
           }
       } else {
