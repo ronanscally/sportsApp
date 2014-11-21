@@ -1,15 +1,16 @@
 <?php
-    // Test script to verify deleteEvent.php
+    // Test script to verify editProfile.php
     //
-    // Normally the app will send eventID in a JSON object, straight to deleteEvent.php
+    // Normally the app will send userID in a JSON object, straight to editProfile.php
 
     include '../postData.php';
-    $destination = 'http://csiserver.ucd.ie/~09333541/sportsapp/events/deleteEvent.php';
+    $destination = 'http://csiserver.ucd.ie/~09333541/sportsapp/friends/deleteFriend.php';
 
     // Generate JSON object
     // Look up details in DB for this user ID
     $data = array (
-        "eventID"    => "1234639",
+      "userID"    => "12345678",                      // User ID
+      "friendID"  => "121234561234",                      // User ID
     );
 
     // Encode JSON data

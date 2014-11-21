@@ -1,8 +1,9 @@
 <?php
 
-// createProfile.php
+// createEvent.php
 //
-// Creates an entry in the profiles table in the database
+// Creates an entry in the events table in the database
+// Also creates an entry in the eventLocation table
 //
 // Returns a JSON object
 
@@ -19,15 +20,13 @@
     $connection->connect();
 
     // Check for required fields
-    if ($decoded['userID'] && $decoded['firstName'] && $decoded['lastName'] && $decoded['dob']) {
-        $userID     = $decoded['userID'];
-        $firstName  = $decoded['firstName'];
-        $lastName   = $decoded['lastName'];
-        $dob        = $decoded['dob'];
+    if ($decoded['userID'] && $decoded['lat'] && $decoded['lng']) {
+        $userID  = $decoded['userID'];
+        $lat = $decoded['lat'];
+        $lng = $decoded['lng'];
 
         // mySQL add user to database
-        $query  = 'INSERT INTO profiles(userID, firstName, lastName, dob) VALUES ('.$userID.',\''.$firstName.'\',\''.$lastName.'\',\''.$dob.'\');';
-
+        $query = 'UPDATE userLocation SET `lng`='.$lng.', `lat`='.$lat.' WHERE userID='.$userID;
         $result = mysqli_query($connection->myconn, $query);
 
         // Check if successful
@@ -35,20 +34,17 @@
             // Create JSON object
             $response[] = array (
                 "success"   => "1",
-                "message"   => "Profile successfully created. ",
+                "message"   => "Location data successfully added to users profile. ",
+                "userID"    => $userID,
             );
         } else {
             $response[] = array (
                 "success"   => "-1",
-                "message"   => "Unable to create profile for this user. ",
+                "message"   => "Unable to add location data to users profile. ",
+                "userID"    => $userID,
             );
         }
-
-        $query = 'INSERT INTO friends(friend_1, friend_2, status) VALUES ('.$userID.', '.$userID.', 0);';
-        $result = mysqli_query($connection->myconn, $query);
-        $query = 'INSERT INTO userLocation(userID, lat, lng) VALUES ('.$userID.', NULL, NULL);';
-        $result = mysqli_query($connection->myconn, $query);
-        $query = 'INSERT INTO userLocationSpatial(userID, location)  VALUES ('.$userID.',GEOMFROMTEXT(\'POINT(0 0)\', 0 ));';
+        $query = 'UPDATE userLocationSpatial SET `location`=GEOMFROMTEXT(\'POINT('.$lng.' '.$lat.')\', 0 ) WHERE userID='.$userID.';';
         $result = mysqli_query($connection->myconn, $query);
     }
     // If not enough fields in JSON object

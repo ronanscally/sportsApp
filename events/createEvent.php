@@ -34,12 +34,12 @@
         // Check if successful
         if ($result) {
             // Create JSON object
-            $response = array (
+            $response[] = array (
                 "success"   => "1",
                 "message"   => "Event successfully created. ",
             );
         } else {
-            $response = array (
+            $response[] = array (
                 "success"   => "-1",
                 "message"   => "Unable to create event. ",
             );
@@ -48,7 +48,7 @@
     // If not enough fields in JSON object
     else {
         // required field is missing
-        $response = array (
+        $response[] = array (
             "success" => "0",
             "message" => "Required field(s) is missing",
         );
@@ -60,29 +60,48 @@
 
     // Fetch each row (should only be 1)
     if ($row = mysqli_fetch_assoc($result)) {
-        $eventID     = $row['LAST_INSERT_ID()'];
-        echo 'Event id = '.$eventID;
+        $eventID = $row['LAST_INSERT_ID()'];
     }
 
     // Add location data
-    if ($decoded['xlocation'] && $decoded['ylocation']) {
-      $xLocation = $decoded['xlocation'];
-      $yLocation = $decoded['ylocation'];
+    if ($decoded['lat'] && $decoded['lng']) {
+      $lat = $decoded['lat'];
+      $lng = $decoded['lng'];
 
       // mySQL add user to database
-      $query = 'INSERT INTO eventLocation(eventID, location) VALUES ('.$eventID.',GEOMFROMTEXT(\'POINT('.$xLocation.' '.$yLocation.')\', 0 ));';
+      $query = 'INSERT INTO eventLocation(eventID, location) VALUES ('.$eventID.',GEOMFROMTEXT(\'POINT('.$lng.' '.$lat.')\', 0 ));';
       $result = mysqli_query($connection->myconn, $query);
 
       // Check if successful
       if ($result) {
           // Create JSON object
-          $response = array (
+          $response[] = array (
               "success"   => "1",
               "message"   => "Location data successfully added. ",
               "eventID"   => $eventID,
           );
       } else {
-          $response = array (
+          $response[] = array (
+              "success"   => "-1",
+              "message"   => "Unable to add location data to event. ",
+              "eventID"   => $eventID,
+          );
+      }
+
+      // mySQL add user to database
+      $query = 'INSERT INTO eventCoords(eventID, lat, lng) VALUES ('.$eventID.','.$lat.','.$lng.')';
+      $result = mysqli_query($connection->myconn, $query);
+
+      // Check if successful
+      if ($result) {
+          // Create JSON object
+          $response[] = array (
+              "success"   => "1",
+              "message"   => "Location data successfully added. ",
+              "eventID"   => $eventID,
+          );
+      } else {
+          $response[] = array (
               "success"   => "-1",
               "message"   => "Unable to add location data to event. ",
               "eventID"   => $eventID,

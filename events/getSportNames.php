@@ -33,7 +33,7 @@
             );
         }
     } else {
-        $response = array (
+        $response[] = array (
             "success"   => "-1",
             "message"   => "Unable to retrieve records. ",
         );
