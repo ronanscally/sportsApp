@@ -9,6 +9,7 @@
     // Include database connection class
     include '../dbConnect.php';
     include '../postData.php';
+    include '../sendGCM.php';
 
     // Get JSON POST and decode
     $received   = file_get_contents("php://input");
@@ -34,7 +35,35 @@
                 "success"   => "1",
                 "message"   => "Friend successfully added. ",
             );
-        } else {
+
+            // Fetch friends device ID and the user name of the person who added them
+            $query  = 'SELECT userDevices.device, profiles.firstName, profiles.lastName ';
+            $query .= 'FROM `userDevices` ';
+            $query .= 'INNER JOIN profiles on profiles.userID='.$userID.' ';
+            $query .= 'WHERE userDevices.userID='.$friendID.' ;';
+            $result = mysqli_query($connection->myconn, $query);
+
+            // Check if successful
+            while ($row = mysqli_fetch_assoc($result)) {
+                $firstName  = $row['firstName'];
+                $lastName   = $row['lastName'];
+                $deviceID   = $row['device'];
+
+                $userName = $firstName.' '.$lastName;
+
+                // Build notification
+                $notification = array(
+                  'message'   => $userName.' has added you! ',
+                );
+
+                // Send notification
+                sendGoogleCloudMessage($notification, array($deviceID));
+                echo var_dump($notification);
+                echo var_dump($deviceID);
+            }
+        }
+        // If unable to add friend...
+        else {
             $response[] = array (
                 "success"   => "-1",
                 "message"   => "Unable to add friend. ",

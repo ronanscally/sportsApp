@@ -9,7 +9,7 @@
     // Include database connection class
     include '/home/2009/09333541/public_html/sportsapp/dbConnect.php';
     include '/home/2009/09333541/public_html/sportsapp/postData.php';
-    include '/home/2009/09333541/public_html/sportsapp/notifications/sendGCM.php';
+    include '/home/2009/09333541/public_html/sportsapp/sendGCM.php';
 
     // Connect to database
     $connection = new createCon();
