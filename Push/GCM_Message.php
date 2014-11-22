@@ -17,11 +17,8 @@ $data = array( 'message' => 'Hello World!' );
 // http://developer.android.com/google/gcm/
 //------------------------------
 
-<<<<<<< HEAD
 $ids = array('APA91bHYrC6A04lCW04z_1TaoWxVJ-yWs21Cc9P5XLMsywsYTatQYQUyS7sWOAZFVDESL-MRnKwt8RF4uCEXVN3MuuTE6ojprmcui7ahLvH1Ac8Ubf5DEl2qCeU0hyJbS5pcchKDyTTnSYk7QrA1vSzH-q8NXc3bgw');
-=======
-$ids = array('APA91bGKqpr8ZSQO0E7vSWP45WTa9kZQQ28Y9_jjKlDIzC6CPa1pQYWu8MfGZfgSLy-nkc_lAE3tPIlKKTpH7TNRJVL6o5PsfM8hQ4wBMS8pL-Zahj1VdRxljMtw68q6Pk-8b3XfkEEHLIEZGNy16E-iljSlrr99EQ');
->>>>>>> origin/master
+
 
 //------------------------------
 // Call our custom GCM function
@@ -42,11 +39,7 @@ function sendGoogleCloudMessage( $data, $ids )
     // https://code.google.com/apis/console/
     //------------------------------
 
-<<<<<<< HEAD
     $apiKey = 'AIzaSyCg0TnBOzhJqT2SwiwwtF-w134uhSepdDA';
-=======
-    $apiKey = 'AIzaSyAdE3CE9NUqwWxO3lKFZa_7dNaWO2psjoY';
->>>>>>> origin/master
 
     //------------------------------
     // Define URL to GCM endpoint
