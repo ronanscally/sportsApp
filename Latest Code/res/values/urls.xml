@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Profiles -->
+    <string name="getProfile" 	>http://csiserver.ucd.ie/~09333541/sportsapp/profiles/checkProfileExists.php</string>
+    <string name="saveProfile"	>http://csiserver.ucd.ie/~09333541/sportsapp/profiles/editProfile.php</string>
+    <string name="saveLocation">http://csiserver.ucd.ie/~09333541/sportsapp/profiles/pushLocation.php</string>
+    <string name="addDevice">http://csiserver.ucd.ie/~09333541/sportsapp/notifications/addDevice.php</string>
+    <!-- Events -->
+    <string name="getEvent"		>http://csiserver.ucd.ie/~09333541/sportsapp/events/getEvent.php</string>
+    <string name="editEvent"	>http://csiserver.ucd.ie/~09333541/sportsapp/events/editEvent.php</string>
+    <string name="createEvent"	>http://csiserver.ucd.ie/~09333541/sportsapp/events/createEvent.php</string>
+    <string name="deleteEvent"	>http://csiserver.ucd.ie/~09333541/sportsapp/events/deleteEvent.php</string>
+    <string name="listEvents"	>http://csiserver.ucd.ie/~09333541/sportsapp/events/listEvents.php</string>
+    
+    
+    
+
+</resources>

@@ -1,0 +1,77 @@
+<LinearLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+	
+	<RelativeLayout 
+		android:layout_width="match_parent"
+		android:layout_height="60dp"
+		android:background="@color/sportsapp_background">
+		
+		<ImageView
+			android:id="@+id/image_title"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="16dp"
+			android:layout_centerInParent="true"
+			android:scaleType="fitCenter"
+			android:src="@drawable/logo"
+			android:contentDescription="@string/profile_picture"/>
+		
+        <com.facebook.widget.ProfilePictureView
+            android:id="@+id/selection_profile_pic"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="right|center_vertical"
+            android:layout_margin="10dp"
+            facebook:preset_size="small" />
+        
+	</RelativeLayout>
+    
+	
+     <Button
+         android:id="@+id/view_profile"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="@string/view_profile" />
+     
+     <Button
+         android:id="@+id/view_events"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="@string/view_events" />
+     
+     <Button
+         android:id="@+id/view_groups"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="@string/view_groups" />
+     
+     <Button
+         android:id="@+id/view_invitations"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="@string/view_invitations" />
+     
+     <Button
+         android:id="@+id/view_friends"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="@string/view_friends" />
+		 
+	<com.facebook.widget.LoginButton
+        android:id="@+id/authButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        />
+     
+
+    
+</LinearLayout>
+
