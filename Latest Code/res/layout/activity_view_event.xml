@@ -51,6 +51,12 @@
          android:layout_height="wrap_content"
          android:onClick="editEvent"
          android:text="@string/edit_event" />
+	 
+	 <Button android:id="@+id/show_map"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:onClick="ShowMap"
+         android:text="@string/button_show_map" />
    
    
 

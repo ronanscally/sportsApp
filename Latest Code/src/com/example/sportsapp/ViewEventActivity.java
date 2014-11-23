@@ -224,5 +224,16 @@ public class ViewEventActivity extends ActionBarActivity {
 		
 	    super.onSaveInstanceState(savedInstanceState);
 	}
+	
+	
+	public void ShowMap (View view) {
+		Log.d("LOG_TAG", "Show Map called from View Events Activity");
+		Intent intent = new Intent(this, ShowMap.class);
+		//Log.d("Intent",intent.toString());
+    	//EditText userID = (EditText) findViewById(R.id.userID);
+    	//intent.putExtra(EXTRA_PREFIX + "userID", userID.getText().toString());
+    	//Log.d("Intent",intent.toString());
+    	startActivity(intent);
+	}
 
 }

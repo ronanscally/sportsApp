@@ -224,6 +224,13 @@ public class HomeFragment extends Fragment {
                     	UserID = user.getId();
                     	userIdent = UserID;
                 		sendRegistrationIdToBackend();
+                		
+                		
+                		if (regid.isEmpty()) {
+                            registerInBackground();
+                            System.out.println("Registered in Background: " + regid);
+                        }
+                		
                     	
                     	System.out.println("ACTIVE SESSION 2: " + UserID);
                     	profilePictureView.setProfileId(UserID);
@@ -352,7 +359,7 @@ public class HomeFragment extends Fragment {
 
                     // You should send the registration ID to your server over HTTP, so it
                     // can use GCM/HTTP or CCS to send messages to your app.
-                    sendRegistrationIdToBackend();
+                    //sendRegistrationIdToBackend();
 
                     // For this demo: we don't need to send it because the device will send
                     // upstream messages to a server that echo back the message using the

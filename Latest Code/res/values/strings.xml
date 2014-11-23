@@ -59,6 +59,12 @@
     
     <string name="profile_picture">Profile Picture</string>
     
+    
+    <!-- Map String -->
+    <string name="button_show_map">Show Map</string>
+    <string name="title_activity_show_map">Show Map</string>
+    
+    
     <string-array name="events_type">
         <item>Attending</item>
         <item>Invited</item>
