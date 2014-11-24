@@ -4,8 +4,10 @@
     <!-- Profiles -->
     <string name="getProfile" 	>http://csiserver.ucd.ie/~09333541/sportsapp/profiles/checkProfileExists.php</string>
     <string name="saveProfile"	>http://csiserver.ucd.ie/~09333541/sportsapp/profiles/editProfile.php</string>
+    <string name="createProfile">http://csiserver.ucd.ie/~09333541/sportsapp/profiles/createProfile.php</string>
     <string name="saveLocation">http://csiserver.ucd.ie/~09333541/sportsapp/profiles/pushLocation.php</string>
     <string name="addDevice">http://csiserver.ucd.ie/~09333541/sportsapp/notifications/addDevice.php</string>
+    
     <!-- Events -->
     <string name="getEvent"		>http://csiserver.ucd.ie/~09333541/sportsapp/events/getEvent.php</string>
     <string name="editEvent"	>http://csiserver.ucd.ie/~09333541/sportsapp/events/editEvent.php</string>

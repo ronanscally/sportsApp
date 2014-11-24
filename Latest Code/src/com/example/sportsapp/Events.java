@@ -1,6 +1,10 @@
 package com.example.sportsapp;
 
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.facebook.AppEventsLogger;
 import com.facebook.Session;
 import com.facebook.SessionState;
@@ -21,6 +25,7 @@ public class Events extends FragmentActivity {
 	private static final String TAG = "Events";
 	
 	static String UserID = null;
+	static String EventID = null;
 	
 
     private static final int LIST = 0;
@@ -30,6 +35,9 @@ public class Events extends FragmentActivity {
     private static final int FRAGMENT_COUNT = SETTINGS +1;
 
     private Fragment[] fragments = new Fragment[FRAGMENT_COUNT];
+
+	private ViewEventFragment viewEventFragment;
+	
     private MenuItem settings;
 	private boolean isResumed = false;
 	
@@ -40,6 +48,9 @@ public class Events extends FragmentActivity {
             onSessionStateChange(session, state, exception);
         }
     };
+
+	private JSONObject EventJSONObject;
+
 	
 	
     @Override
@@ -60,9 +71,10 @@ public class Events extends FragmentActivity {
         // Find fragments
         FragmentManager fm = getSupportFragmentManager();
         ListEventsFragment listEventsFragment = (ListEventsFragment) fm.findFragmentById(R.id.listFragment);
+        viewEventFragment = (ViewEventFragment) fm.findFragmentById(R.id.viewFragment);
         fragments[LIST] = listEventsFragment;
         fragments[CREATE] = fm.findFragmentById(R.id.createFragment);
-        fragments[VIEW] = fm.findFragmentById(R.id.viewFragment);
+        fragments[VIEW] = viewEventFragment;
         fragments[SETTINGS] = fm.findFragmentById(R.id.userSettingsFragment);
         
         // Hide fragments
@@ -72,27 +84,35 @@ public class Events extends FragmentActivity {
         }
         transaction.commit();
         
-        
         listEventsFragment.setCreateCallback(new ListEventsFragment.ButtonPressedCallback() {
             @Override
-            public void onButtonPressed() {
+            public void onButtonPressed(String id) {
+                Log.d(TAG,"Create Button Pressed id: " + id);
                 showFragment(CREATE, false);
-                Log.d(TAG,"Create Button Pressed");
             }
         });
         
         listEventsFragment.setViewEventCallback(new ListEventsFragment.ButtonPressedCallback() {
             @Override
-            public void onButtonPressed() {
+            public void onButtonPressed(String id) {
+                Log.d(TAG,"View Event Pressed id: " + id);
+                setEventID(id);
                 showFragment(VIEW, false);
-                Log.d(TAG,"Create Button Pressed");
+            }
+        });
+        
+        viewEventFragment.setBackCallback(new ViewEventFragment.ButtonPressedCallback() {
+            @Override
+            public void onButtonPressed(String id) {
+                Log.d(TAG,"Back Button Pressed id: " + id);
+                showFragment(LIST, false);
             }
         });
         
         
     }
-    
-    @Override
+
+	@Override
     public void onResume() {
         super.onResume();
         uiHelper.onResume();
@@ -184,7 +204,7 @@ public class Events extends FragmentActivity {
     }
 
     private void showFragment(int fragmentIndex, boolean addToBackStack) {
-    	Log.d(TAG,"showFragment for "+ String.valueOf(fragmentIndex));
+    	Log.d(TAG,"showFragment "+ String.valueOf(fragmentIndex));
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
         for (int i = 0; i < fragments.length; i++) {
@@ -198,5 +218,93 @@ public class Events extends FragmentActivity {
             transaction.addToBackStack(null);
         }
         transaction.commit();
-    }  
+        if(fragmentIndex == VIEW){	// Get data for view event
+            getEventData(EventID);
+//            Log.d(TAG,"Data Got!");
+//            updateViewEvent();
+        	viewEventFragment.setDisplayData(EventJSONObject);
+        	
+        }
+    }
+
+    private void updateViewEvent() {
+		// TODO Auto-generated method stub
+    	Log.d(TAG,"Updating view");
+//    	viewEventFragment.setDisplayData();
+	}
+
+	public static String getEventID() {
+		return EventID;
+	}
+	public static void setEventID(String eventID) {
+		EventID = eventID;
+	} 
+	
+	private boolean getEventData(String eventID) { 	
+    	String message 		= null;
+    	int success 		= 0;
+    	
+    	JSONObject request = new JSONObject();
+    	 
+    	try {
+			request.put("eventID", eventID);
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+    	Log.d("ViewEventActivity","Request: " + request.toString());
+    	
+
+    	JSONfunctions.setRequestObject(request);
+    	String url = getString(R.string.getEvent);
+    	Log.d("ViewEventActivity","Url: " + url);
+    	new JSONfunctions().execute(url);
+
+    	// TODO more with timeout error... (make global?)
+    	long timeStart = System.currentTimeMillis();
+    	boolean timeout = false;
+    	int timeoutSeconds = 10;
+    	JSONArray responseArray = null;
+    	while (true){
+    		if(timeStart + timeoutSeconds*1000 < System.currentTimeMillis()){	// Timeout (10seconds...)
+    			Log.d("ViewEventActivity","No server response.");
+    			Log.d("ViewEventActivity","Timeout triggered after " + timeoutSeconds + " seconds");
+    			timeout = true;
+    			break;
+    		}
+    		
+    		if(JSONfunctions.checkNewResponse()){
+    			responseArray = JSONfunctions.getResponseArray();
+    			break;
+    		}
+    	}
+    	if(!timeout){
+    		if(responseArray.length() != 1)
+        		Log.e("DisplayProfileActivity","Unexpected response length...");
+        	JSONObject responseObject = null;
+    		try {
+    			responseObject = responseArray.getJSONObject(0);
+    		} catch (JSONException e1) {
+    			// TODO Auto-generated catch block
+    			e1.printStackTrace();
+    		}
+	    	try {
+	    		success 	= responseObject.getInt("success");
+	    		message 	= responseObject.getString("message");
+	    	} catch (JSONException e) {
+	    		e.printStackTrace();
+	    	}
+	    	
+	    	Log.d("ViewEventActivity","Message: " + message);
+	    	
+	    	if(success == 1) // Event exists, get data
+	    	{
+	    		EventJSONObject = responseObject;
+	    	}else{
+	    		// TODO if event doesn't exist.
+	    		return false;
+	    	}
+	    	return true;
+    	}
+		return false;
+	}
 }

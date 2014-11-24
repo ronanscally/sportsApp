@@ -33,7 +33,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ListEventsFragment extends Fragment  {
+public class ListEventsFragment extends Fragment {
 
 	private static final String TAG = "ListEventsFragment";
 	
@@ -53,9 +53,10 @@ public class ListEventsFragment extends Fragment  {
 	private JSONArray UserEventsJSONArray;
 	
 	private ButtonPressedCallback createPressedCallback;
+	private ButtonPressedCallback viewEventPressedCallback;
 
     public interface ButtonPressedCallback {
-        void onButtonPressed();
+        void onButtonPressed(String id);
     }
     
     public void setCreateCallback(ButtonPressedCallback callback) {
@@ -63,7 +64,7 @@ public class ListEventsFragment extends Fragment  {
     }
     
     public void setViewEventCallback(ButtonPressedCallback callback) {
-    	createPressedCallback = callback;
+    	viewEventPressedCallback = callback;
     }
 		
 	@Override
@@ -93,8 +94,8 @@ public class ListEventsFragment extends Fragment  {
 	    latitude =  gps.getLatitude();
 		longitude = gps.getLongitude();
 		
+		nearbyButton.setText("Nearby Events");
 		
-		nearbyButton.setText("Near By Events");
 		adapter = ArrayAdapter.createFromResource(getActivity(),
 		        R.array.events_type, android.R.layout.simple_spinner_item);
 		// Specify the layout to use when the list of choices appears
@@ -103,10 +104,7 @@ public class ListEventsFragment extends Fragment  {
 		eventUserStatusSpinner.setAdapter(adapter);
 		
 		yourEventsButton.setVisibility(View.GONE);
-		
-		
-		
-		
+
 		
 		
 		nearbyButton.setOnClickListener(new View.OnClickListener() {
@@ -132,7 +130,6 @@ public class ListEventsFragment extends Fragment  {
             		e.printStackTrace();
             		
             	}
-            	
             }
         });
 		
@@ -144,13 +141,14 @@ public class ListEventsFragment extends Fragment  {
             	buttonBar.setVisibility(View.VISIBLE);
             }
         });
-
 		
 		createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               	eventUserStatusSpinner.setEnabled(false);
-            	eventUserStatusSpinner.setAdapter(adapter);
+                if (createPressedCallback != null) {
+                	Log.d(TAG,"onClick");
+                	createPressedCallback.onButtonPressed("Create");
+                }
             }
         });
 		
@@ -161,7 +159,6 @@ public class ListEventsFragment extends Fragment  {
 			try {
 				listElements.add(new EventListElement(UserEventsJSONArray.getJSONObject(i)));
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -192,14 +189,6 @@ public class ListEventsFragment extends Fragment  {
     	startActivity(intent);
     }
     */
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	private class ActionListAdapter extends ArrayAdapter<BaseListElement> {
         private List<BaseListElement> listElements;
@@ -255,6 +244,42 @@ public class ListEventsFragment extends Fragment  {
         }
 
     }
+	
+	private class EventListElement extends BaseListElement {
+		private JSONObject EventObject;
+		public EventListElement(JSONObject eventObject) {
+			//getResources().getDrawable(R.drawable.ic_launcher)
+			super(eventObject,getIconForList(eventObject));
+			EventObject = eventObject;
+		}
+		
+
+		@Override
+		protected OnClickListener getOnClickListener() {
+			// TODO Auto-generated method stub
+			return new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                	if (viewEventPressedCallback != null) {
+                		String eventID = null;
+                		try{
+                			eventID 	= EventObject.getString("eventID");
+            	    	} catch (JSONException e) {
+            	    		e.printStackTrace();
+            	    	}
+                    	viewEventPressedCallback.onButtonPressed(eventID);
+                    }
+                }
+            };
+		}
+
+		@Override
+		protected void populateOGAction(OpenGraphAction action) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
+	
 	
 	private boolean getUserEvents() {
     	
@@ -318,27 +343,7 @@ public class ListEventsFragment extends Fragment  {
 		return false;
 	}
 	
-	private class EventListElement extends BaseListElement {
-		private JSONObject EventObject;
-		public EventListElement(JSONObject eventObject) {
-			//getResources().getDrawable(R.drawable.ic_launcher)
-			super(eventObject,getIconForList(eventObject));
-			EventObject = eventObject;
-		}
-		
-
-		@Override
-		protected OnClickListener getOnClickListener() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		protected void populateOGAction(OpenGraphAction action) {
-			// TODO Auto-generated method stub
-			
-		}
-	}
+	
 	
 	private Drawable getIconForList(JSONObject eventObject){
 		int sportID = 0;
@@ -354,11 +359,4 @@ public class ListEventsFragment extends Fragment  {
 		
 		return getResources().getDrawable(R.drawable.ic_launcher);
 	}
-	
-	
-	//GPS Stuff
-	
-	
-	
-	
 }

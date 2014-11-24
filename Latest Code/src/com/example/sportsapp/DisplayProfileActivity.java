@@ -82,7 +82,7 @@ public class DisplayProfileActivity extends ActionBarActivity {
     	}
 	    
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // If your minSdkVersion is 11 or higher, instead use:
         // getActionBar().setDisplayHomeAsUpEnabled(true);
 

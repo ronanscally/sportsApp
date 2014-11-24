@@ -16,8 +16,6 @@
 
 package com.example.sportsapp;
 
-import java.sql.Timestamp;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 

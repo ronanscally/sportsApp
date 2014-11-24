@@ -4,13 +4,17 @@ package com.example.sportsapp;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.facebook.AppEventsLogger;
+import com.facebook.Request;
+import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.facebook.model.GraphUser;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -36,15 +40,13 @@ import android.widget.Toast;
 public class MainActivity extends FragmentActivity {
 	private static final String TAG = "MainActivity";
 	private static final String USER_SKIPPED_LOGIN_KEY = "user_skipped_login";
+	private static final String USER_PROFILE_EXISTS = "user_profile_exists";
 	
-	static String UserID = null;
-	
-	
-//	private LoginFragment loginFragment;
 
     private static final int SPLASH = 0;
     private static final int HOME = 1;
-    private static final int SETTINGS = 2;
+    private static final int NEW_USER = 2;
+    private static final int SETTINGS = 3;
     private static final int FRAGMENT_COUNT = SETTINGS +1;
 
     private Fragment[] fragments = new Fragment[FRAGMENT_COUNT];
@@ -60,6 +62,7 @@ public class MainActivity extends FragmentActivity {
      * Substitute you own sender ID here. This is the project number you got
      * from the API Console, as described in "Getting Started."
      */
+	//TODO ask Mark about this value
     String SENDER_ID = "191229453439";
 	
 	
@@ -70,7 +73,6 @@ public class MainActivity extends FragmentActivity {
 
     String regid;
 	
-	
 	private UiLifecycleHelper uiHelper;
 	private Session.StatusCallback callback = new Session.StatusCallback() {
         @Override
@@ -80,20 +82,23 @@ public class MainActivity extends FragmentActivity {
             onSessionStateChange(session, state, exception);
         }
     };
+	protected String UserID;
+	private boolean UserProfileExists = true;
+	protected boolean UserProfileCreated = false;
 	
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if(savedInstanceState != null)
-        {
-        	UserID 		= savedInstanceState.getString("UserID");
-        }else{
-        }
         
         uiHelper = new UiLifecycleHelper(this, callback);
         uiHelper.onCreate(savedInstanceState);
+        
+        if(savedInstanceState != null)
+        {
+        	UserID 		= savedInstanceState.getString("UserID");
+        	UserProfileExists = savedInstanceState.getBoolean(USER_PROFILE_EXISTS);
+        }
         
         setContentView(R.layout.main);
         
@@ -102,6 +107,7 @@ public class MainActivity extends FragmentActivity {
         SplashFragment splashFragment = (SplashFragment) fm.findFragmentById(R.id.splashFragment);
         fragments[SPLASH] = splashFragment;
         fragments[HOME] = fm.findFragmentById(R.id.homeFragment);
+        fragments[NEW_USER] = fm.findFragmentById(R.id.newUserFragment);
         fragments[SETTINGS] = fm.findFragmentById(R.id.userSettingsFragment);
         
         // Hide fragments
@@ -119,58 +125,45 @@ public class MainActivity extends FragmentActivity {
             }
         });
         
-        GPSTracker gps = new GPSTracker(this);
+		
+		GPSTracker gps = new GPSTracker(this);
 		 
-			double latitude =  gps.getLatitude();
-			double longitude = gps.getLongitude();
-			Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-			//gps.showSettingsAlert();
-			    
-	    	
-	    	
-	    	
-	    	Log.d("LOG_TAG","In GCM Function");
-	        
-	        //setContentView(R.layout.gcm);
-	        //mDisplay = (TextView) findViewById(R.id.display);
+		double latitude =  gps.getLatitude();
+		double longitude = gps.getLongitude();
+		Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+		//gps.showSettingsAlert();
+		
+		//setContentView(R.layout.gcm);
+		//mDisplay = (TextView) findViewById(R.id.display);
 
-	        context = getApplicationContext();
-	        
-	        
-	        
-	        // Check device for Play Services APK. If check succeeds, proceed with GCM registration.
-	        if (checkPlayServices()) {
-	            gcm = GoogleCloudMessaging.getInstance(this);
-	            regid = getRegistrationId(context);
-	            System.out.println(regid);
-	            HomeFragment home = new HomeFragment(); 
-	            System.out.println("Marks User Id" + home.userIdent);
-	            
-	            //UserID = "10152504871783499";
-	            if (regid.isEmpty()) {
-	                registerInBackground();
-	                System.out.println("Finished register in bg");
-	            }
-	        } else {
-	            Log.i(TAG, "No valid Google Play Services APK found.");
-	        }
-	        
-	        Log.i(TAG, regid);
-	    	
-	        
-        // sendRegistrationIdToBackend();
+		context = getApplicationContext();
+		
+		// Check device for Play Services APK. If check succeeds, proceed with GCM registration.
+		if (checkPlayServices()) {
+			gcm = GoogleCloudMessaging.getInstance(this);
+			regid = getRegistrationId(context);
+			System.out.println(regid);
+			HomeFragment home = new HomeFragment(); 
+			System.out.println("Marks User Id" + home.userIdent);
+			
+			//UserID = "10152504871783499";
+			if (regid.isEmpty()) {
+				registerInBackground();
+				System.out.println("Finished register in bg");
+			}
+		} else {
+			Log.i(TAG, "No valid Google Play Services APK found.");
+		}
+		
+		Log.i(TAG, regid);
+		
         Log.d(TAG,"Ending onCreateFunction");
-        
-        
     }
-    
-    
-    public String getRegId(){
-    	
+	
+	//TODO ask Mark about this hard coded value..
+	public String getRegId(){
     	return "1234567";
     } 
-    
-    
     
     @Override
     public void onResume() {
@@ -181,11 +174,9 @@ public class MainActivity extends FragmentActivity {
         // Call the 'activateApp' method to log an app event for use in analytics and advertising reporting.  Do so in
         // the onResume methods of the primary Activities that an app may be launched into.
         AppEventsLogger.activateApp(this);
-        
-     // Check device for Play Services APK.
+		
+		// Check device for Play Services APK.
         checkPlayServices();
-        
-        //mDisplay.append(regid + "\n");
     }
 
     @Override
@@ -217,6 +208,8 @@ public class MainActivity extends FragmentActivity {
         uiHelper.onSaveInstanceState(outState);
 
         outState.putBoolean(USER_SKIPPED_LOGIN_KEY, userSkippedLogin);
+        outState.putBoolean(USER_PROFILE_EXISTS,UserProfileExists);
+        outState.putString("UserID",UserID);
     }
 
     @Override
@@ -228,9 +221,14 @@ public class MainActivity extends FragmentActivity {
         if (session != null && session.isOpened()) {
         	Log.d(TAG,"session.isOpened");
             // if the session is already open, try to show the selection fragment
-            showFragment(HOME, false);
+        	if(UserProfileExists){
+        		showFragment(HOME, false);
+        	}else{
+        		showFragment(NEW_USER,false);
+        	}
             userSkippedLogin = false;
         } else if (userSkippedLogin) {
+        	// TODO remove skip login button...
             showFragment(HOME, false);
         } else {
             // otherwise present the splash screen and ask the user to login, unless the user explicitly skipped.
@@ -241,7 +239,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // only add the menu when the selection fragment is showing
-        if (fragments[HOME].isVisible()) {
+        if (fragments[HOME].isVisible() || fragments[NEW_USER].isVisible()) {
             if (menu.size() == 0) {
                 settings = menu.add(R.string.settings);
             }
@@ -277,14 +275,204 @@ public class MainActivity extends FragmentActivity {
             // check for the OPENED state instead of session.isOpened() since for the
             // OPENED_TOKEN_UPDATED state, the selection fragment should already be showing.
             if (state.equals(SessionState.OPENED)) {
-                showFragment(HOME, false);
+	            makeMeRequest(session);
+            	if(UserProfileExists){
+            		showFragment(HOME, false);
+            	}else{
+            		showFragment(NEW_USER,false);
+            	}
             } else if (state.isClosed()) {
                 showFragment(SPLASH, false);
             }
         }
     }
 
-    private void showFragment(int fragmentIndex, boolean addToBackStack) {
+    private boolean checkUserProfile() {
+    	String message 		= null;
+    	int success 		= 0;
+    	
+    	JSONObject request = new JSONObject();
+    	 
+    	try {
+			request.put("userID", UserID);
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+    	Log.d("TAG","Request: " + request.toString());
+    	JSONfunctions.setRequestObject(request);
+    	String url = getString(R.string.getProfile);
+    	Log.d("TAG","Url: " + url);
+    	new JSONfunctions().execute(url);
+
+    	// TODO more with timeout error... (make global?)
+    	long timeStart = System.currentTimeMillis();
+    	boolean timeout = false;
+    	int timeoutSeconds = 10;
+    	JSONArray responseArray = null;
+    	while (true){
+    		if(timeStart + timeoutSeconds*1000 < System.currentTimeMillis()){	// Timeout (10seconds...)
+    			Log.d(TAG,"No server response.");
+    			Log.d(TAG,"Timeout triggered after " + timeoutSeconds + " seconds");
+    			timeout = true;
+    			break;
+    		}
+    		
+    		if(JSONfunctions.checkNewResponse()){
+    			responseArray = JSONfunctions.getResponseArray();
+    			break;
+    		}
+    	}
+    	if(!timeout){
+    		if(responseArray.length() != 1)
+        		Log.e(TAG,"Unexpected response length...");
+        	JSONObject responseObject = null;
+    		try {
+    			responseObject = responseArray.getJSONObject(0);
+    		} catch (JSONException e1) {
+    			// TODO Auto-generated catch block
+    			e1.printStackTrace();
+    		}
+	    	try {
+	    		success 	= responseObject.getInt("success");
+	    		message 	= responseObject.getString("message");
+	    	} catch (JSONException e) {
+	    		e.printStackTrace();
+	    	}
+	    	
+	    	Log.d(TAG,"Message: " + message);
+	    	
+	    	if(success == 1)	// User Profile exists
+	    	{
+	    		return true;
+	    	}else if(success == -1){ // User Profile doesn't Exist
+	    		return false;
+	    	}else if(success == 0){
+	    		// TODO if poor request
+	    		Log.e(TAG,"Poor Request..");
+	    	}
+	    	else{
+	    		// TODO if poor response
+	    		Log.e(TAG,"Poor Response..");
+	    	}
+    	}
+		return false;
+	}
+    
+    private void makeMeRequest(final Session session) {
+        Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
+            @Override
+            public void onCompleted(GraphUser user, Response response) {
+                if (session == Session.getActiveSession()) {
+                    if (user != null) {
+                    	UserID = user.getId();
+                    	UserProfileExists = checkUserProfile();
+                    	if(UserProfileExists){
+                    		showFragment(HOME, false);
+                    	}else{
+                    		showFragment(NEW_USER,false);
+                    		// Create entry for user in user table
+//                    		if(!UserProfileCreated)
+//                    			UserProfileCreated = createUser(user);
+                    		UserProfileExists = createUser(user);
+                    		Log.d(TAG,"UserProfileExists: " + UserProfileExists);
+                    	}
+                    }
+                }
+                if (response.getError() != null) {
+//                    handleError(response.getError());
+                }
+            }
+        });
+        request.executeAsync();
+
+    }
+
+	protected boolean createUser(GraphUser user) {
+		// TODO Auto-generated method stub
+		String message 		= null;
+    	int success 		= 0;
+    	
+    	String userID = user.getId();
+    	String firstName = user.getFirstName();
+    	String lastName = user.getLastName();
+    	String dob = user.getBirthday();
+    	Log.d(TAG,"DOB: " + dob);
+    	if(dob == null){
+    		dob = "1970-01-01";
+    		Log.d(TAG,"Setting DOB to: " + dob);
+    	}
+    	
+    	JSONObject request = new JSONObject();
+    	 
+    	try {
+			request.put("userID", userID);
+			request.put("firstName", firstName);
+			request.put("lastName", lastName);
+			request.put("dob", dob);
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+    	Log.d(TAG,"Request: " + request.toString());
+    	JSONfunctions.setRequestObject(request);
+    	String url = getString(R.string.createProfile);
+    	Log.d(TAG,"Url: " + url);
+    	new JSONfunctions().execute(url);
+
+    	// TODO more with timeout error... (make global?)
+    	long timeStart = System.currentTimeMillis();
+    	boolean timeout = false;
+    	int timeoutSeconds = 10;
+    	JSONArray responseArray = null;
+    	while (true){
+    		if(timeStart + timeoutSeconds*1000 < System.currentTimeMillis()){	// Timeout (10seconds...)
+    			Log.d(TAG,"No server response.");
+    			Log.d(TAG,"Timeout triggered after " + timeoutSeconds + " seconds");
+    			timeout = true;
+    			break;
+    		}
+    		
+    		if(JSONfunctions.checkNewResponse()){
+    			responseArray = JSONfunctions.getResponseArray();
+    			break;
+    		}
+    	}
+    	if(!timeout){
+    		if(responseArray.length() != 1)
+        		Log.e(TAG,"Unexpected response length...");
+        	JSONObject responseObject = null;
+    		try {
+    			responseObject = responseArray.getJSONObject(0);
+    		} catch (JSONException e1) {
+    			// TODO Auto-generated catch block
+    			e1.printStackTrace();
+    		}
+	    	try {
+	    		success 	= responseObject.getInt("success");
+	    		message 	= responseObject.getString("message");
+	    	} catch (JSONException e) {
+	    		e.printStackTrace();
+	    	}
+	    	
+	    	Log.d(TAG,"Message: " + message);
+	    	
+	    	if(success == 1)	// User Profile created
+	    	{
+	    		return true;
+	    	}else if(success == -1){
+	    		Log.e(TAG,"Unable to create entry for user");
+	    		return false;
+	    	}else if(success == 0){
+	    		// TODO if poor request
+	    		Log.e(TAG,"Poor Request..");
+	    	}else{
+	    		// TODO if poor response
+	    		Log.e(TAG,"Poor Response..");
+	    	}
+    	}
+		return false;
+	}
+
+	private void showFragment(int fragmentIndex, boolean addToBackStack) {
     	Log.d(TAG,"showFragment");
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
@@ -300,11 +488,9 @@ public class MainActivity extends FragmentActivity {
         }
         transaction.commit();
     }  
-    
-    
-    
-    
-    /**
+	
+	
+	/**
      * Check the device to make sure it has the Google Play Services APK. If
      * it doesn't, display a dialog that allows users to download the APK from
      * the Google Play Store or enable it in the device's system settings.
@@ -470,5 +656,5 @@ public class MainActivity extends FragmentActivity {
     		
     	}
     }
-    
+	
 }

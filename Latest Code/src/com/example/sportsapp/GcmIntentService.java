@@ -1,24 +1,11 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.example.sportsapp;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import java.util.Calendar;
+
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -44,6 +31,9 @@ public class GcmIntentService extends IntentService {
         super("GcmIntentService");
     }
     public static final String TAG = "GCM Demo";
+    public static final String TITLE_MESSAGE = "title";
+    public static final String DISTANCE_MESSAGE = "distance";
+    public static final String FRIEND_MESSAGE = "friendAdd";
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -60,23 +50,40 @@ public class GcmIntentService extends IntentService {
              * not interested in, or that you don't recognize.
              */
             if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-                sendNotification("Send error: " + extras.toString());
+            	sendDefaultNotification(Calendar.getInstance().getTimeInMillis(), "Send error: " + extras.toString());
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED.equals(messageType)) {
-                sendNotification("Deleted messages on server: " + extras.toString());
-            // If it's a regular GCM message, do some work.
-            } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-                // This loop represents the service doing some work.
-                for (int i = 0; i < 5; i++) {
-                    Log.i(TAG, "Working... " + (i + 1)
-                            + "/5 @ " + SystemClock.elapsedRealtime());
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                    }
-                }
+            	sendDefaultNotification(Calendar.getInstance().getTimeInMillis(), "Deleted messages on server: " + extras.toString());
+            // If it's a message about an event, do this
+            } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType) && (extras.containsKey(DISTANCE_MESSAGE))) {
+                // DELAY LOOP
+            	// This loop represents the service doing some work.
+//                for (int i = 0; i < 5; i++) {
+//                    Log.i(TAG, "Working... " + (i + 1)
+//                            + "/5 @ " + SystemClock.elapsedRealtime());
+//                    try {
+//                        Thread.sleep(5000);
+//                    } catch (InterruptedException e) {
+//                    }
+//                }
                 Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
                 // Post notification of received message.
-                sendNotification("Received: " + extras.toString());
+                sendEventNotification(Calendar.getInstance().getTimeInMillis(), extras.getString(TITLE_MESSAGE)+", "+extras.getString(DISTANCE_MESSAGE)+" away");
+                Log.i(TAG, "Received: " + extras.toString());
+            // If it's a message about a friend, do this
+            } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType) && (extras.containsKey(FRIEND_MESSAGE))) {
+                // DELAY LOOP
+            	// This loop represents the service doing some work.
+//                for (int i = 0; i < 5; i++) {
+//                    Log.i(TAG, "Working... " + (i + 1)
+//                            + "/5 @ " + SystemClock.elapsedRealtime());
+//                    try {
+//                        Thread.sleep(5000);
+//                    } catch (InterruptedException e) {
+//                    }
+//                }
+                Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
+                // Post notification of received message.
+                sendFriendRequestNotification(Calendar.getInstance().getTimeInMillis(), extras.getString(FRIEND_MESSAGE));
                 Log.i(TAG, "Received: " + extras.toString());
             }
         }
@@ -87,22 +94,72 @@ public class GcmIntentService extends IntentService {
     // Put the message into a notification and post it.
     // This is just one simple example of what you might choose to do with
     // a GCM message.
-    private void sendNotification(String msg) {
+    private void sendEventNotification(long when, String notificationMsg) {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainActivity.class), 0);
+                new Intent(this, GCM_Registration.class), 0);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
         .setSmallIcon(R.drawable.ic_launcher)
-        .setContentTitle("GCM Notification")
+        .setContentTitle("PlayerX")
+        .setWhen(when)
         .setStyle(new NotificationCompat.BigTextStyle()
-        .bigText(msg))
-        .setContentText(msg);
+        .bigText(notificationMsg))
+        .setDefaults(Notification.DEFAULT_LIGHTS| Notification.DEFAULT_VIBRATE| Notification.DEFAULT_SOUND)
+        .setContentText(notificationMsg);
 
         mBuilder.setContentIntent(contentIntent);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        mNotificationManager.notify((int) when, mBuilder.build());
+    }
+    
+    // Put the message into a notification and post it.
+    // This is just one simple example of what you might choose to do with
+    // a GCM message.
+    private void sendDefaultNotification(long when, String notificationMsg) {
+        mNotificationManager = (NotificationManager)
+                this.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, GCM_Registration.class), 0);
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+        .setSmallIcon(R.drawable.ic_launcher)
+        .setContentTitle("PlayerX")
+        .setWhen(when)
+        .setStyle(new NotificationCompat.BigTextStyle()
+        .bigText(notificationMsg))
+        .setDefaults(Notification.DEFAULT_LIGHTS| Notification.DEFAULT_VIBRATE| Notification.DEFAULT_SOUND)
+        .setContentText(notificationMsg);
+
+        mBuilder.setContentIntent(contentIntent);
+        mNotificationManager.notify((int) when, mBuilder.build());
+    }
+    
+    // Put the message into a notification and post it.
+    // This is just one simple example of what you might choose to do with
+    // a GCM message.
+    private void sendFriendRequestNotification(long when, String notificationMsg) {
+        mNotificationManager = (NotificationManager)
+                this.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, GCM_Registration.class), 0);
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+        .setSmallIcon(R.drawable.ic_launcher)
+        .setContentTitle("PlayerX")
+        .setWhen(when)
+        .setStyle(new NotificationCompat.BigTextStyle()
+        .bigText(notificationMsg))
+        .setDefaults(Notification.DEFAULT_LIGHTS| Notification.DEFAULT_VIBRATE| Notification.DEFAULT_SOUND)
+        .setContentText(notificationMsg);
+
+        mBuilder.setContentIntent(contentIntent);
+        mNotificationManager.notify((int) when, mBuilder.build());
     }
 }
