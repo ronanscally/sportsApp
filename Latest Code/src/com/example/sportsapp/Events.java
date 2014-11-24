@@ -51,6 +51,7 @@ public class Events extends FragmentActivity {
 
 	private JSONObject EventJSONObject;
 
+
 	
 	
     @Override
@@ -72,8 +73,9 @@ public class Events extends FragmentActivity {
         FragmentManager fm = getSupportFragmentManager();
         ListEventsFragment listEventsFragment = (ListEventsFragment) fm.findFragmentById(R.id.listFragment);
         viewEventFragment = (ViewEventFragment) fm.findFragmentById(R.id.viewFragment);
+        CreateEventFragment createEventFragment = (CreateEventFragment) fm.findFragmentById(R.id.createFragment);
         fragments[LIST] = listEventsFragment;
-        fragments[CREATE] = fm.findFragmentById(R.id.createFragment);
+        fragments[CREATE] = createEventFragment;
         fragments[VIEW] = viewEventFragment;
         fragments[SETTINGS] = fm.findFragmentById(R.id.userSettingsFragment);
         
@@ -102,6 +104,14 @@ public class Events extends FragmentActivity {
         });
         
         viewEventFragment.setBackCallback(new ViewEventFragment.ButtonPressedCallback() {
+            @Override
+            public void onButtonPressed(String id) {
+                Log.d(TAG,"Back Button Pressed id: " + id);
+                showFragment(LIST, false);
+            }
+        });
+        
+        createEventFragment.setBackCallback(new CreateEventFragment.ButtonPressedCallback() {
             @Override
             public void onButtonPressed(String id) {
                 Log.d(TAG,"Back Button Pressed id: " + id);

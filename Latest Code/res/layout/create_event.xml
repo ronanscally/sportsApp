@@ -206,7 +206,7 @@
 		android:text="Players Required" />
 
 	<EditText
-	    android:id="@+id/players"
+	    android:id="@+id/playersRequired"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_margin="10dp"
@@ -224,7 +224,7 @@
 		android:text="Location" />
 
 	<EditText
-	    android:id="@+id/location"
+	    android:id="@+id/locationAddress"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_margin="10dp"
