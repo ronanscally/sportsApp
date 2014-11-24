@@ -43,9 +43,6 @@ public class JSONfunctions extends AsyncTask<String, Integer, Long> {
 	        HttpClient httpclient = new DefaultHttpClient();
 	        HttpPost httppost = new HttpPost(urls[0]);
 	        
-//	        StringEntity params =new StringEntity("details={\"name\":\"myname\",\"age\":\"20\"} ");
-//	        StringEntity params =new StringEntity("{\"userID\":\"12345678\"} ");
-	        
 	        Log.d("JSON","Attempting to http...");
 	        
 	        StringEntity params =new StringEntity(Request.toString());
@@ -103,6 +100,11 @@ public class JSONfunctions extends AsyncTask<String, Integer, Long> {
 		// TODO Make this better... use the onPostExecute() function..
 		NewResponse = false;
 		return Response; 
+	}
+	
+	public static void clearResponseBuffer(){
+		// TODO Make this better... use the onPostExecute() function..
+		NewResponse = false; 
 	}
 	
 	public static boolean checkNewResponse(){

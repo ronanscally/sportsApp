@@ -382,6 +382,7 @@ public class HomeFragment extends Fragment {
     private void sendRegistrationIdToBackend() {
       // Your implementation here.
     	try{
+    		Log.d(TAG,"sendRegistrationIdToBackend");
         	JSONObject request = new JSONObject();
         	request.put("userID", UserID);
     		request.put("deviceID", regid);
@@ -389,6 +390,20 @@ public class HomeFragment extends Fragment {
         	JSONfunctions.setRequestObject(request);
         	String save_location = getString(R.string.addDevice);
         	new JSONfunctions().execute(save_location);
+        	
+            long timeStart = System.currentTimeMillis();
+        	int timeoutSeconds = 10;
+        	while (true){
+        		if(timeStart + timeoutSeconds*1000 < System.currentTimeMillis()){	// Timeout (10seconds...)
+        			Log.d(TAG,"No server response.");
+        			Log.d(TAG,"Timeout triggered after " + timeoutSeconds + " seconds");
+        			break;
+        		}
+        		if(JSONfunctions.checkNewResponse()){
+        			break;
+        		}
+        	}
+        	Log.d(TAG,"sendRegistrationIdToBackend Finished");
     	}catch(JSONException e){
     		System.out.println("Send Location to server");
     		e.printStackTrace();

@@ -146,10 +146,18 @@ public class MainActivity extends FragmentActivity {
 			HomeFragment home = new HomeFragment(); 
 			System.out.println("Marks User Id" + home.userIdent);
 			
-			//UserID = "10152504871783499";
 			if (regid.isEmpty()) {
 				registerInBackground();
 				System.out.println("Finished register in bg");
+//                try {
+//                    if (gcm == null) {
+//                        gcm = GoogleCloudMessaging.getInstance(context);
+//                    }
+//                    regid = gcm.register(SENDER_ID);
+//                    sendRegistrationIdToBackend();
+//                    storeRegistrationId(context, regid);
+//                } catch (IOException ex) {
+//                }
 			}
 		} else {
 			Log.i(TAG, "No valid Google Play Services APK found.");
@@ -298,10 +306,11 @@ public class MainActivity extends FragmentActivity {
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}
-    	Log.d("TAG","Request: " + request.toString());
+    	Log.d(TAG,"Request: " + request.toString());
     	JSONfunctions.setRequestObject(request);
     	String url = getString(R.string.getProfile);
-    	Log.d("TAG","Url: " + url);
+    	Log.d(TAG,"Url: " + url);
+    	JSONfunctions.clearResponseBuffer();
     	new JSONfunctions().execute(url);
 
     	// TODO more with timeout error... (make global?)
@@ -365,7 +374,9 @@ public class MainActivity extends FragmentActivity {
                 if (session == Session.getActiveSession()) {
                     if (user != null) {
                     	UserID = user.getId();
+                		Log.d(TAG,"Checking profile...");
                     	UserProfileExists = checkUserProfile();
+                    	Log.d(TAG,"Profile exists? : " + UserProfileExists);
                     	if(UserProfileExists){
                     		showFragment(HOME, false);
                     	}else{
@@ -638,15 +649,28 @@ public class MainActivity extends FragmentActivity {
     private void sendRegistrationIdToBackend() {
       // Your implementation here.
     	try{
+    		Log.d(TAG,"sendRegistrationIdToBackend");
         	JSONObject request = new JSONObject();
         	request.put("userID", UserID);
     		request.put("deviceID", regid);
-    		
-    		System.out.println("I Got Here, Class!! semicolon");
     		// Send to server
         	JSONfunctions.setRequestObject(request);
         	String save_location = getString(R.string.addDevice);
         	new JSONfunctions().execute(save_location);
+        	
+        	long timeStart = System.currentTimeMillis();
+        	int timeoutSeconds = 10;
+        	while (true){
+        		if(timeStart + timeoutSeconds*1000 < System.currentTimeMillis()){	// Timeout (10seconds...)
+        			Log.d(TAG,"No server response.");
+        			Log.d(TAG,"Timeout triggered after " + timeoutSeconds + " seconds");
+        			break;
+        		}
+        		if(JSONfunctions.checkNewResponse()){
+        			break;
+        		}
+        	}
+        	Log.d(TAG,"sendRegistrationIdToBackend Finished");
     	}catch(JSONException e){
     		System.out.println("Send Location to server");
     		e.printStackTrace();
