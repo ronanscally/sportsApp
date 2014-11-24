@@ -241,6 +241,7 @@ public class Events extends FragmentActivity {
 	} 
 	
 	private boolean getEventData(String eventID) { 	
+		JSONfunctions.clearResponseBuffer();
     	String message 		= null;
     	int success 		= 0;
     	
@@ -251,12 +252,12 @@ public class Events extends FragmentActivity {
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}
-    	Log.d("ViewEventActivity","Request: " + request.toString());
+    	Log.d(TAG,"Request: " + request.toString());
     	
 
     	JSONfunctions.setRequestObject(request);
     	String url = getString(R.string.getEvent);
-    	Log.d("ViewEventActivity","Url: " + url);
+    	Log.d(TAG,"Url: " + url);
     	new JSONfunctions().execute(url);
 
     	// TODO more with timeout error... (make global?)
@@ -266,8 +267,8 @@ public class Events extends FragmentActivity {
     	JSONArray responseArray = null;
     	while (true){
     		if(timeStart + timeoutSeconds*1000 < System.currentTimeMillis()){	// Timeout (10seconds...)
-    			Log.d("ViewEventActivity","No server response.");
-    			Log.d("ViewEventActivity","Timeout triggered after " + timeoutSeconds + " seconds");
+    			Log.d(TAG,"No server response.");
+    			Log.d(TAG,"Timeout triggered after " + timeoutSeconds + " seconds");
     			timeout = true;
     			break;
     		}
@@ -294,7 +295,7 @@ public class Events extends FragmentActivity {
 	    		e.printStackTrace();
 	    	}
 	    	
-	    	Log.d("ViewEventActivity","Message: " + message);
+	    	Log.d(TAG,"Message: " + message);
 	    	
 	    	if(success == 1) // Event exists, get data
 	    	{

@@ -111,6 +111,8 @@ public class DisplayProfileActivity extends ActionBarActivity {
 	}
 	
 	public boolean getProfileData() {
+		
+		JSONfunctions.clearResponseBuffer();
     	
     	String message 		= null;
     	int success 		= 0;

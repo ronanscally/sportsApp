@@ -107,7 +107,7 @@ public class HomeFragment extends Fragment {
         viewEventsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            	Intent intent = new Intent(getActivity(), ListEventsActivity.class);
+            	Intent intent = new Intent(getActivity(), Events.class);
             	intent.putExtra(R.string.EXTRA_PREFIX + "userID", UserID);
             	startActivity(intent);
             }
@@ -125,7 +125,7 @@ public class HomeFragment extends Fragment {
         viewInvitationsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            	Intent intent = new Intent(getActivity(), Events.class);
+            	Intent intent = new Intent(getActivity(), ListEventsActivity.class);
             	intent.putExtra(R.string.EXTRA_PREFIX + "userID", UserID);
             	startActivity(intent);
             }

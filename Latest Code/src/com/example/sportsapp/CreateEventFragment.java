@@ -9,12 +9,14 @@ import android.view.ViewGroup;
 
 public class CreateEventFragment extends Fragment {
 
-		
+	static final int TIME_DIALOG_ID = 999;
+
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.create_event, container, false);
-	
+		super.onCreate(savedInstanceState);
+		View view = inflater.inflate(R.layout.create_event, container, false);
 
 		return view;
+
 	}
 }

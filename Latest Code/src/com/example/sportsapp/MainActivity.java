@@ -105,9 +105,10 @@ public class MainActivity extends FragmentActivity {
         // Find fragments
         FragmentManager fm = getSupportFragmentManager();
         SplashFragment splashFragment = (SplashFragment) fm.findFragmentById(R.id.splashFragment);
+        NewUserFragment newUserFragment = (NewUserFragment) fm.findFragmentById(R.id.newUserFragment);
         fragments[SPLASH] = splashFragment;
         fragments[HOME] = fm.findFragmentById(R.id.homeFragment);
-        fragments[NEW_USER] = fm.findFragmentById(R.id.newUserFragment);
+        fragments[NEW_USER] = newUserFragment;
         fragments[SETTINGS] = fm.findFragmentById(R.id.userSettingsFragment);
         
         // Hide fragments
@@ -121,6 +122,13 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onSkipLoginPressed() {
 //                userSkippedLogin = true;
+                showFragment(HOME, false);
+            }
+        });
+        
+        newUserFragment.setProceedButtonCallback(new NewUserFragment.ProceedButtonCallback() {
+            @Override
+            public void onProceedButtonPressed() {
                 showFragment(HOME, false);
             }
         });

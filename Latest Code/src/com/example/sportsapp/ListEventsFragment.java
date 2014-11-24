@@ -44,6 +44,7 @@ public class ListEventsFragment extends Fragment {
 	private Button createButton;
 	private RelativeLayout buttonBar;
 	private ListView listView;
+	private TextView noEventsText;
 	private List<BaseListElement> listElements;
 	private String UserID;
 	GPSTracker gps;
@@ -51,9 +52,11 @@ public class ListEventsFragment extends Fragment {
 	private double longitude = 0;
 	
 	private JSONArray UserEventsJSONArray;
+	private boolean EventsPresent = false;
 	
 	private ButtonPressedCallback createPressedCallback;
 	private ButtonPressedCallback viewEventPressedCallback;
+
 
     public interface ButtonPressedCallback {
         void onButtonPressed(String id);
@@ -88,6 +91,8 @@ public class ListEventsFragment extends Fragment {
 		createButton 			= (Button) 			view.findViewById(R.id.createButton);
 		buttonBar 				= (RelativeLayout) 	view.findViewById(R.id.buttonBar);
 		listView 				= (ListView) 		view.findViewById(R.id.eventsList);
+		noEventsText			= (TextView) 		view.findViewById(R.id.noEventsText);
+		
 		
 		
 		GPSTracker gps = new GPSTracker(this.getActivity());		 
@@ -152,17 +157,22 @@ public class ListEventsFragment extends Fragment {
             }
         });
 		
-		
+		noEventsText.setVisibility(View.GONE);
+		listView.setVisibility(View.GONE);
 		listElements = new ArrayList<BaseListElement>();
-		
-		for (int i = 0; i < UserEventsJSONArray.length(); i++) {
-			try {
-				listElements.add(new EventListElement(UserEventsJSONArray.getJSONObject(i)));
-			} catch (JSONException e) {
-				e.printStackTrace();
+		if(EventsPresent){ // Add events to list if present
+			for (int i = 0; i < UserEventsJSONArray.length(); i++) {
+				try {
+					listElements.add(new EventListElement(UserEventsJSONArray.getJSONObject(i)));
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 			}
+			listView.setVisibility(View.VISIBLE);
+		}else{
+			// Set no events element to be visible
+			noEventsText.setVisibility(View.VISIBLE);
 		}
-		
         
         if (savedInstanceState != null) {
             for (BaseListElement listElement : listElements) {
@@ -171,6 +181,7 @@ public class ListEventsFragment extends Fragment {
         }
 
         listView.setAdapter(new ActionListAdapter(getActivity(), R.id.eventsList, listElements));
+        
 		return view;
         
         
@@ -282,7 +293,8 @@ public class ListEventsFragment extends Fragment {
 	
 	
 	private boolean getUserEvents() {
-    	
+    	JSONfunctions.clearResponseBuffer();
+		
     	String message 		= null;
     	int success 		= 0;
     	
@@ -294,7 +306,7 @@ public class ListEventsFragment extends Fragment {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-    	Log.d("ListEventsActivity","Request: " + request.toString());
+    	Log.d(TAG,"Request: " + request.toString());
     	
     	JSONfunctions.setRequestObject(request);
     	new JSONfunctions().execute(getString(R.string.listEvents));
@@ -315,30 +327,39 @@ public class ListEventsFragment extends Fragment {
     			break;
     		}
     	}
-
+    	
     	if(!timeout){
-        	JSONObject responseObject = null;
-    		try {
-    			responseObject = responseArray.getJSONObject(0);
-    		} catch (JSONException e1) {
-    			// TODO Auto-generated catch block
-    			e1.printStackTrace();
-    		}
-	    	try {
-	    		success 	= responseObject.getInt("success");
-	    		message 	= responseObject.getString("message");
-	    	} catch (JSONException e) {
-	    		e.printStackTrace();
-	    	}
-	    	
-	    	if(success == 1) // Events exists, get data
-	    	{
-	    		UserEventsJSONArray = responseArray;
-	    	}else{
-	    		// TODO if events doesn't exist.
-	    		return false;
-	    	}
-	    	return true;
+    		if(responseArray == null){
+        		Log.d(TAG,"Null response recieved");
+        		UserEventsJSONArray = responseArray;
+        		EventsPresent = false;
+        		return true;
+        	}else{
+        		Log.d(TAG,responseArray.toString());
+	        	JSONObject responseObject = null;
+	    		try {
+	    			responseObject = responseArray.getJSONObject(0);
+	    		} catch (JSONException e1) {
+	    			// TODO Auto-generated catch block
+	    			e1.printStackTrace();
+	    		}
+		    	try {
+		    		success 	= responseObject.getInt("success");
+		    		message 	= responseObject.getString("message");
+		    	} catch (JSONException e) {
+		    		e.printStackTrace();
+		    	}
+		    	
+		    	if(success == 1) // Events exists, get data
+		    	{
+		    		UserEventsJSONArray = responseArray;
+		    		EventsPresent = true;
+		    	}else{
+		    		// TODO if events doesn't exist.
+		    		return false;
+		    	}
+		    	return true;
+        	}
     	}
 		return false;
 	}

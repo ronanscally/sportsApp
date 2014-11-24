@@ -49,6 +49,7 @@ public class JSONfunctions extends AsyncTask<String, Integer, Long> {
 	        httppost.addHeader("content-type", "application/x-www-form-urlencoded");
 	        httppost.setEntity(params);
 	        Log.d("JSON","Params: " + params);
+	        Log.d("JSON","URL: " + urls[0]);
 	        
 	        HttpResponse response = httpclient.execute(httppost);
 	        HttpEntity entity = response.getEntity();
@@ -84,13 +85,13 @@ public class JSONfunctions extends AsyncTask<String, Integer, Long> {
 //	    }catch (JSONException e){
 //	    	Log.e("JSON", "Error parsing data " + e.toString());
 //	    }
+	    Log.d("JSON","result string: " + result);
 	    try {
 	        jArray = new JSONArray(result);
+	        Log.d("JSON","Received object is: " + jArray.toString());
 	    } catch (JSONException e) {
-	        Log.e("JSON", "Error parsing data " + e.toString());
+	        Log.d("JSON", "Error parsing data " + e.toString());
 	    }
-
-	    Log.d("JSON","Received object is: " + jArray.toString());	    
 	    Response = jArray;
 	    NewResponse = true;
 		return null;

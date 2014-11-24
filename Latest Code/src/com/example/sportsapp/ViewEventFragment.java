@@ -5,8 +5,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.sportsapp.ListEventsFragment.ButtonPressedCallback;
 import com.facebook.UiLifecycleHelper;
+import com.google.android.gms.maps.model.LatLng;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,22 +21,28 @@ import android.widget.TextView;
 public class ViewEventFragment extends Fragment {
 
 	private static final String TAG = "ViewEventsFragment";
-	private String UserID;
-	private String EventID;
-	private String HostID;
+//	private String UserID;
+//	private String EventID;
+//	private String HostID;
 	private String EventName;
 	private String Sport;
-	private String DateTime;
+	private String StartTime;
+	private String EndTime;
+	private LatLng Location_coords;
+	private String Location_address;
 	private short PeopleRequired;
 	private short PeopleAttending;
-	private TextView text_eventName;
-	private TextView text_eventTime;
-	private TextView text_eventSport;
-	private TextView text_peopleRequired;
-	private TextView text_peopleAttending;
 	private Button backButton;
 	
 	private ButtonPressedCallback backPressedCallback;
+	private TextView text_eventName;
+	private TextView text_eventStartTime;
+	private TextView text_eventEndTime;
+	private TextView text_eventSport;
+	private TextView text_peopleAttending;
+	private TextView text_peopleRequired;
+	private TextView text_location;
+	private Button showMapButton;
 
     public interface ButtonPressedCallback {
         void onButtonPressed(String id);
@@ -68,15 +74,29 @@ public class ViewEventFragment extends Fragment {
         View view = inflater.inflate(R.layout.view_event, container, false);
 		
 		// TODO saved instance state
-		Intent intent = getActivity().getIntent();
-	    UserID 		= intent.getStringExtra(R.string.EXTRA_PREFIX + "userID");
-	    EventID 	= Events.getEventID();
+//		Intent intent = getActivity().getIntent();
+//	    UserID 		= intent.getStringExtra(R.string.EXTRA_PREFIX + "userID");
+//	    EventID 	= Events.getEventID();
 	    
-	    text_eventName 			= (TextView) view.findViewById(R.id.eventName);
-    	text_eventTime 			= (TextView) view.findViewById(R.id.eventTime);
+	    text_eventName 				= (TextView) view.findViewById(R.id.eventName);
+    	text_eventStartTime 		= (TextView) view.findViewById(R.id.eventStartTime);
+    	text_eventEndTime			= (TextView) view.findViewById(R.id.eventEndTime);
     	text_eventSport 			= (TextView) view.findViewById(R.id.eventSport);
-    	text_peopleRequired 		= (TextView) view.findViewById(R.id.peopleRequired);
-    	text_peopleAttending 		= (TextView) view.findViewById(R.id.peopleAttending);
+    	text_peopleAttending 		= (TextView) view.findViewById(R.id.eventNumAttending);
+    	text_peopleRequired 		= (TextView) view.findViewById(R.id.eventNumRequired);
+    	text_location				= (TextView) view.findViewById(R.id.eventLocation);
+    	
+    	showMapButton = (Button) view.findViewById(R.id.show_map_button);
+    	showMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            	Intent intent = new Intent(getActivity(), ShowMap.class);
+            	intent.putExtra(R.string.EXTRA_PREFIX + "lat", Location_coords.latitude);
+            	intent.putExtra(R.string.EXTRA_PREFIX + "lng", Location_coords.longitude);
+            	intent.putExtra(R.string.EXTRA_PREFIX + "EventName", EventName);
+            	startActivity(intent);
+            }
+        });
     	
     	backButton 			= (Button) 			view.findViewById(R.id.backButton);
     	backButton.setOnClickListener(new View.OnClickListener() {
@@ -95,24 +115,40 @@ public class ViewEventFragment extends Fragment {
 	}
 	
 	public void setDisplayData(JSONObject eventJSONObject){
-		// TODO seperate this into two methods
 		try{
-		HostID 			= 			eventJSONObject.getString("hostID");
-		EventName 		= 			eventJSONObject.getString("eventName");
-		Sport 			= 			eventJSONObject.getString("sport");
-		DateTime 			= 			eventJSONObject.getString("date");
-		PeopleRequired 	= (short) 	eventJSONObject.getInt("numReqd");
-		PeopleAttending 	= (short) 	eventJSONObject.getInt("numAttn");
+			Log.d(TAG,"Setting display data");
+//			HostID 			= 			eventJSONObject.getString("hostID");
+			EventName 		= 			eventJSONObject.getString("eventName");
+			Sport 			= 			eventJSONObject.getString("sport");
+			StartTime 		= 			eventJSONObject.getString("startTime");
+			EndTime 		= 			eventJSONObject.getString("endTime");
+			PeopleRequired 	= (short) 	eventJSONObject.getInt("numReqd");
+			PeopleAttending = (short) 	eventJSONObject.getInt("numAttn");
+			
+			double location_lng	= 			eventJSONObject.getDouble("lng");
+			double location_lat	= 			eventJSONObject.getDouble("lat");
+			Location_coords = new LatLng(location_lng,location_lat);
+			//TODO find address
+			Location_address = "Need to find the address...";
 		}catch(JSONException e){
 			e.printStackTrace();
 		}
-		Log.d(TAG,"Setting Display Data");
-		text_eventName.setText(HostID);
-    	text_eventTime.setText(EventName);
-    	text_eventSport.setText(Sport);
-    	text_peopleRequired.setText(String.valueOf(PeopleRequired));
-    	text_peopleAttending.setText(String.valueOf(PeopleAttending));
+		updateDisplayData();
 	}
 	
-	
+	private void updateDisplayData() {
+		Log.d(TAG,"Updating display data");
+		try{
+			Log.d(TAG,"Updating display data");
+			text_eventName.setText(EventName);
+			text_eventStartTime.setText(StartTime);
+			text_eventEndTime.setText(EndTime);
+			text_eventSport.setText(Sport);
+			text_peopleAttending.setText(String.valueOf(PeopleAttending));
+			text_peopleRequired.setText(String.valueOf(PeopleRequired));
+			text_location.setText(Location_address);
+		}catch(Exception e){
+			Log.d(TAG,"Could not update display data");
+		}
+	}
 }
