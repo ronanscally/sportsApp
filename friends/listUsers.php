@@ -23,19 +23,19 @@
       $userID = $decoded['userID'];
 
       // mySQL list all users
-    $query  = 'SELECT userID, firstName, lastName, MAX(status) AS friendStatus ';
-    $query .= 'FROM ';
-    $query .= '(SELECT profiles.userID, 0 AS status, profiles.firstName, profiles.lastName ';
-    $query .= 'FROM profiles ';
-    $query .= 'UNION ALL ';
-    $query .= 'SELECT friends.friend_2, friends.status, profiles.firstName, profiles.lastName ';
-    $query .= 'FROM friends ';
-    $query .= 'INNER JOIN `profiles` on friends.friend_2=profiles.userID ';
-    $query .= 'WHERE friend_1=12345678 AND friends.status=1) ';
-    $query .= 'T1 ';
-    $query .= 'WHERE userID!='.$userID.' ';
-    $query .= 'GROUP BY userID  ';
-    $query .= 'ORDER BY firstName';
+      $query  = 'SELECT userID, firstName, lastName, MAX(status) AS friendStatus ';
+      $query .= 'FROM ';
+      $query .= '(SELECT profiles.userID, 0 AS status, profiles.firstName, profiles.lastName ';
+      $query .= 'FROM profiles ';
+      $query .= 'UNION ALL ';
+      $query .= 'SELECT friends.friend_2, friends.status, profiles.firstName, profiles.lastName ';
+      $query .= 'FROM friends ';
+      $query .= 'INNER JOIN `profiles` on friends.friend_2=profiles.userID ';
+      $query .= 'WHERE friend_1='.$userID.' AND friends.status=1) ';
+      $query .= 'T1 ';
+      $query .= 'WHERE userID!='.$userID.' ';
+      $query .= 'GROUP BY userID  ';
+      $query .= 'ORDER BY firstName';
 
       $result = mysqli_query($connection->myconn, $query);
 
@@ -53,7 +53,7 @@
               $response[] = array (
                   "success"       => "1",
                   "message"       => "User found. ",
-                  "userID"        => $friendID,
+                  "userID"        => $userID,
                   "firstName"     => $firstName,
                   "lastName"      => $lastName,
                   "friendStatus"  => $friendStatus,
