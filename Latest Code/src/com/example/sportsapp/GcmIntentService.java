@@ -34,6 +34,7 @@ public class GcmIntentService extends IntentService {
     public static final String TITLE_MESSAGE = "title";
     public static final String DISTANCE_MESSAGE = "distance";
     public static final String FRIEND_MESSAGE = "friendAdd";
+    public static final String EVENT_MESSAGE = "eventInvite";
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -84,6 +85,21 @@ public class GcmIntentService extends IntentService {
                 Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
                 // Post notification of received message.
                 sendFriendRequestNotification(Calendar.getInstance().getTimeInMillis(), extras.getString(FRIEND_MESSAGE));
+                Log.i(TAG, "Received: " + extras.toString());
+            } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType) && (extras.containsKey(EVENT_MESSAGE))) {
+                // DELAY LOOP
+            	// This loop represents the service doing some work.
+//                for (int i = 0; i < 5; i++) {
+//                    Log.i(TAG, "Working... " + (i + 1)
+//                            + "/5 @ " + SystemClock.elapsedRealtime());
+//                    try {
+//                        Thread.sleep(5000);
+//                    } catch (InterruptedException e) {
+//                    }
+//                }
+                Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
+                // Post notification of received message.
+                sendEventInviteNotification(Calendar.getInstance().getTimeInMillis(), extras.getString(EVENT_MESSAGE));
                 Log.i(TAG, "Received: " + extras.toString());
             }
         }
@@ -143,6 +159,31 @@ public class GcmIntentService extends IntentService {
     // This is just one simple example of what you might choose to do with
     // a GCM message.
     private void sendFriendRequestNotification(long when, String notificationMsg) {
+        mNotificationManager = (NotificationManager)
+                this.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, GCM_Registration.class), 0);
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+        .setSmallIcon(R.drawable.ic_launcher)
+        .setContentTitle("PlayerX")
+        .setWhen(when)
+        .setStyle(new NotificationCompat.BigTextStyle()
+        .bigText(notificationMsg))
+        .setDefaults(Notification.DEFAULT_LIGHTS| Notification.DEFAULT_VIBRATE| Notification.DEFAULT_SOUND)
+        .setContentText(notificationMsg);
+
+        mBuilder.setContentIntent(contentIntent);
+        mNotificationManager.notify((int) when, mBuilder.build());
+    }
+    
+    
+    // Put the message into a notification and post it.
+    // This is just one simple example of what you might choose to do with
+    // a GCM message.
+    private void sendEventInviteNotification(long when, String notificationMsg) {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 

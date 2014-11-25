@@ -9,6 +9,7 @@
     // Include database connection class
     include '../dbConnect.php';
     include '../postData.php';
+    include '../sendGCM.php';
 
     // Get JSON POST and decode
     $received   = file_get_contents("php://input");
@@ -50,15 +51,12 @@
 
                 // Build notification
                 $notification = array(
-                  'eventInvite' => $userName.' has added you! ',
+                  'eventInvite' => $message,
                 );
 
                 // Send notification
                 sendGoogleCloudMessage($notification, array($deviceID));
             }
-
-
-
 
         } else {
             $response[] = array (
