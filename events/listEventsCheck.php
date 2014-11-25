@@ -9,7 +9,7 @@
     // Generate JSON object
     // Look up details in DB for this user ID
     $data = array (
-      "userID"    => "12345678",                      // User ID
+      "userID"    => "908862745805631",                      // User ID
     );
 
     // Encode JSON data

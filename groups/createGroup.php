@@ -1,15 +1,14 @@
 <?php
 
-// addFriend.php
+// createGroup.php
 //
-// Adds a user to the friends table
+// Creates a group, and adds the group creator as administrator
 //
 // Returns a JSON object
 
     // Include database connection class
     include '../dbConnect.php';
     include '../postData.php';
-    include '../sendGCM.php';
 
     // Get JSON POST and decode
     $received   = file_get_contents("php://input");
@@ -20,12 +19,13 @@
     $connection->connect();
 
     // Check for required fields
-    if ($decoded['userID'] && $decoded['friendID']) {
-        $userID   = $decoded['userID'];
-        $friendID = $decoded['friendID'];
+    if ($decoded['userID'] && $decoded['groupName'] && $decoded['category']) {
+        $userID     = $decoded['userID'];
+        $groupName  = $decoded['groupName'];
+        $category   = $decoded['category'];
 
         // mySQL add user to database
-        $query = 'INSERT INTO friends(friend_1, friend_2, status) VALUES ('.$userID.','.$friendID.', 1)';
+        $query = 'INSERT INTO groups(groupAdmin, name, category) VALUES ('.$userID.','.$groupName.', \''.$groupName.'\')';
         $result = mysqli_query($connection->myconn, $query);
 
         // Check if successful
@@ -53,11 +53,13 @@
 
                 // Build notification
                 $notification = array(
-                  'friendAdd'   => $userName.' has added you! ',
+                  'message'   => $userName.' has added you! ',
                 );
 
                 // Send notification
                 sendGoogleCloudMessage($notification, array($deviceID));
+                echo var_dump($notification);
+                echo var_dump($deviceID);
             }
         }
         // If unable to add friend...

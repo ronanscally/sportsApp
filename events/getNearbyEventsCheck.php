@@ -1,16 +1,15 @@
 <?php
-    // Test script to verify editProfile.php
+    // Test script to verify createEvent.php
     //
-    // Normally the app will send userID in a JSON object, straight to editProfile.php
+    // Normally the app will send userID in a JSON object, straight to createEvent.php
 
     include '../postData.php';
-    $destination = 'http://csiserver.ucd.ie/~09333541/sportsapp/friends/addFriend.php';
+    $destination = 'http://csiserver.ucd.ie/~09333541/sportsapp/events/getNearbyEvents.php';
 
     // Generate JSON object
-    // Look up details in DB for this user ID
+
     $data = array (
-      "userID"    => "1111",                      // User ID
-      "friendID"  => "908862745805631",                      // User ID
+        "userID"    => "908862745805631",                      // User ID
     );
 
     // Encode JSON data
@@ -26,6 +25,6 @@
         echo 'Successful POST. <br />';
     }
 
-    // Print response.
+    // Print response
     echo "<pre>$result</pre>";
 ?>

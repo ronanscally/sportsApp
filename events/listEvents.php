@@ -24,16 +24,16 @@
 
       // mySQL get records
       // To return date as dd/mm/yyyy
-      // $query =  'SELECT eventParticipants.eventID, eventParticipants.attendingStatus, (DATE_FORMAT(events.dateTime, '%d/%m/%Y')) AS eventDate, events.sport, events.title, eventLocation.location ';
-      $query =  'SELECT eventParticipants.eventID, eventParticipants.attendingStatus, events.sport, events.title, eventLocation.location, sports.sportID, eventCoords.name, eventCoords.address, ';
-      $query .= "(DATE_FORMAT(events.dateTime, '%d/%m/%Y')) AS date, (DATE_FORMAT(events.dateTime, '%H:%i:%s')) AS time, (DATE_FORMAT(events.dateTime, '%W')) AS day ";
+      // $query =  'SELECT eventParticipants.eventID, eventParticipants.attendingStatus, (DATE_FORMAT(events.startTime, '%d/%m/%Y')) AS eventDate, events.sport, events.title, eventLocation.location ';
+      $query  = 'SELECT eventParticipants.eventID, eventParticipants.attendingStatus, events.sport, events.title, eventLocation.location, sports.sportID, eventCoords.name, eventCoords.address, ';
+      $query .= "(DATE_FORMAT(events.startTime, '%d/%m/%Y')) AS date, (DATE_FORMAT(events.startTime, '%H:%i')) AS time, (DATE_FORMAT(events.startTime, '%W')) AS day ";
       $query .= 'FROM  `eventParticipants` ';
       $query .= 'INNER JOIN  `events`        ON eventParticipants.eventID = events.eventID ';
       $query .= 'INNER JOIN  `eventLocation` ON eventParticipants.eventID = eventLocation.eventID ';
       $query .= 'INNER JOIN  `eventCoords`   ON eventParticipants.eventID = eventCoords.eventID ';
       $query .= 'INNER JOIN  `sports` ON events.sport = sports.sport ';
-      $query .= 'WHERE eventParticipants.userID='.$userID.' AND events.dateTime > CURRENT_TIMESTAMP() ';
-      $query .= 'ORDER BY (events.dateTime) ASC ';
+      $query .= 'WHERE eventParticipants.userID='.$userID.' AND events.startTime > CURRENT_TIMESTAMP() ';
+      $query .= 'ORDER BY (events.startTime) ASC ';
       $result = mysqli_query($connection->myconn, $query);
 
       // Check if successful
@@ -60,9 +60,9 @@
                   "message"   => "Event found. ",
                   "eventID"   => $eventID,
                   "eventName" => $title,
-                  "date"      => $date,
-                  "time"      => $time,
-                  "day"       => $day,
+                  "startDate" => $date,
+                  "startTime" => $time,
+                  "startDay"  => $day,
                   "placeName" => $placeName,
                   "placeAddr" => $placeAddr,
                   "sport"     => $sport,

@@ -23,11 +23,12 @@
         $eventID  = $decoded['eventID'];
         $title    = $decoded['title'];
         $sport    = $decoded['sport'];
-        $dateTime = $decoded['dateTime'];
+        $startTime = $decoded['startTime'];
+        $endTime = $decoded['endTime'];
         $numReqd  = $decoded['numReqd'];
 
         // mySQL check for user in database
-        $query = 'UPDATE `events` SET title=\''.$title.'\', sport=\''.$sport.'\', dateTime=\''.$dateTime.'\', peopleRequired = \''.$numReqd.'\' WHERE eventID = '.$eventID.';';
+        $query = 'UPDATE `events` SET title=\''.$title.'\', sport=\''.$sport.'\', startTime=\''.$startTime.'\', endTime=\''.$endTime.'\', peopleRequired = \''.$numReqd.'\' WHERE eventID = '.$eventID.';';
         $result = mysqli_query($connection->myconn, $query);
 
         // Check if row exists or not
@@ -39,7 +40,8 @@
                 "eventID"  => $eventID,
                 "title"    => $title,
                 "sport"    => $sport,
-                "dateTime" => $dateTime,
+                "startTime"=> $startTime,
+                "endTime"  => $endTime,
                 "numReqd"  => $numReqd,
             );
         // If row does not exist, return -1

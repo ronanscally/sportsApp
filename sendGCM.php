@@ -9,7 +9,8 @@ function sendGoogleCloudMessage( $data, $ids )
     // https://code.google.com/apis/console/
     //------------------------------
 
-    $apiKey = 'AIzaSyAdE3CE9NUqwWxO3lKFZa_7dNaWO2psjoY';
+    // $apiKey = 'AIzaSyAdE3CE9NUqwWxO3lKFZa_7dNaWO2psjoY';   // Ronan API key
+    $apiKey = 'AIzaSyCg0TnBOzhJqT2SwiwwtF-w134uhSepdDA';      // Mark API key
 
     //------------------------------
     // Define URL to GCM endpoint

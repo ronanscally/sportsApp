@@ -24,12 +24,21 @@
       $eventID = $decoded['eventID'];
 
       // mySQL get records
-      $query =  'SELECT events.dateTime, events.peopleRequired, events.peopleAttending, events.hostID, events.title, events.sport, AsWKT(eventLocation.location), sports.sportID ';
-      $query .= 'FROM  `events` ';
-      $query .= 'INNER JOIN  `eventLocation` ON eventLocation.eventID = events.eventID ';
-      $query .= 'INNER JOIN  `sports` ON events.sport = sports.sport ';
-      $query .= 'WHERE events.eventID='.$eventID.' ';
-      $query .= 'ORDER BY (events.dateTime) ASC ';
+      // $query =  'SELECT events.startTime, events.endTime, events.peopleRequired, events.peopleAttending, events.hostID, events.title, events.sport, AsWKT(eventLocation.location), sports.sportID ';
+      // $query .= 'FROM  `events` ';
+      // $query .= 'INNER JOIN  `eventLocation` ON eventLocation.eventID = events.eventID ';
+      // $query .= 'INNER JOIN  `sports` ON events.sport = sports.sport ';
+      // $query .= 'WHERE events.eventID='.$eventID.' ';
+      // $query .= 'ORDER BY (events.startTime) ASC ';
+
+
+      $query =  'SELECT events.startTime, events.endTime, events.hostID, events.title, events.sport, AsWKT(eventLocation.location), sports.sportID, events.peopleRequired, COUNT(eventParticipants.userID) as numAttending, COUNT(eventParticipants.userID) = events.peopleRequired as full ';
+      $query .= 'FROM  `events`  ';
+      $query .= 'INNER JOIN  `eventLocation` ON eventLocation.eventID = events.eventID  ';
+      $query .= 'INNER JOIN  `eventParticipants` ON eventParticipants.eventID = events.eventID  ';
+      $query .= 'INNER JOIN  `sports` ON events.sport = sports.sport  ';
+      $query .= 'WHERE events.eventID='.$eventID.' AND eventParticipants.attendingStatus=2 ';
+      $query .= 'ORDER BY (events.startTime) ASC ';
 
       // Send
       $result = mysqli_query($connection->myconn, $query);
@@ -39,8 +48,10 @@
           // Get details
           $hostID   = $row['hostID'];
           $numReqd  = $row['peopleRequired'];
-          $numAttn  = $row['peopleAttending'];
-          $date     = $row['dateTime'];
+          $numAttn  = $row['numAttending'];
+          $eventFull = $row['full'];
+          $startTime= $row['startTime'];
+          $endTime  = $row['endTime'];
           $title    = $row['title'];
           $location = $row['AsWKT(eventLocation.location)'];
           // $attending = $row['attendingStatus'];
@@ -57,8 +68,10 @@
               "hostID"    => $hostID,
               "numReqd"   => $numReqd,
               "numAttn"   => $numAttn,
+              "eventFull" => $eventFull,
               "eventName" => $title,
-              "date"      => $date,
+              "startTime" => $startTime,
+              "endTime"   => $endTime,
               "lng"       => $coords[0],
               "lat"       => $coords[1],
               "attnStatus"=> $attending,

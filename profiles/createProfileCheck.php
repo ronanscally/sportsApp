@@ -9,10 +9,10 @@
     // Generate JSON object
     // Look up details in DB for this user ID
     $data = array (
-        "userID"    => "10152504871783499",
-        "firstName" => "Mark",
-        "lastName"  => "Purcell",
-        "dob"       => "1992-11-03",
+        "userID"    => "908862745805631",
+        "firstName" => "Owen",
+        "lastName"  => "Binchy",
+        "dob"       => "1992-06-14",
     );
 
     // Encode JSON data

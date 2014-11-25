@@ -20,15 +20,16 @@
     $connection->connect();
 
     // Check for required fields
-    if ($decoded['userID'] && $decoded['title'] && $decoded['sport'] && $decoded['dateTime'] && $decoded['numReqd']) {
+    if ($decoded['userID'] && $decoded['title'] && $decoded['sport'] && $decoded['startTime'] && $decoded['endTime'] && $decoded['numReqd']) {
         $eventHost  = $decoded['userID'];
         $eventTitle = $decoded['title'];
         $sport      = $decoded['sport'];
-        $dateTime   = $decoded['dateTime'];
+        $startTime  = $decoded['startTime'];
+        $endTime    = $decoded['endTime'];
         $peopleReqd = $decoded['numReqd'];
 
         // mySQL add user to database
-        $query = 'INSERT INTO events(hostID, title, sport, dateTime, peopleRequired) VALUES ('.$eventHost.',\''.$eventTitle.'\',\''.$sport.'\',\''.$dateTime.'\','.$peopleReqd.');';
+        $query = 'INSERT INTO events(hostID, title, sport, startTime, endTime, peopleRequired) VALUES ('.$eventHost.',\''.$eventTitle.'\',\''.$sport.'\',\''.$startTime.'\',\''.$endTime.'\','.$peopleReqd.');';
         $result = mysqli_query($connection->myconn, $query);
 
         // Check if successful
@@ -64,7 +65,7 @@
     }
 
     // Add location data
-    if ($decoded['lat'] && $decoded['lng']) {
+    if ($decoded['lat'] && $decoded['lng'] && $eventID) {
       $lat = $decoded['lat'];
       $lng = $decoded['lng'];
 
@@ -107,6 +108,10 @@
               "eventID"   => $eventID,
           );
       }
+
+      // mySQL add user to database
+      $query = 'INSERT INTO eventParticipants(eventID, userID, attendingStatus) VALUES ('.$eventID.','.$eventHost.', 2)';
+      $result = mysqli_query($connection->myconn, $query);
     }
 
     // echoing JSON response
