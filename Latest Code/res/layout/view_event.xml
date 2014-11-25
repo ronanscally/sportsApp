@@ -46,16 +46,18 @@
 		android:layout_height="60dip"
 		android:orientation="horizontal" 
 		style="?android:attr/buttonBarStyle">
-		<!-- 
-	   <Spinner
-	       android:id="@+id/eventUserStatusSpinner"
+		
+	   <Button
+	       android:id="@+id/inviteButton"
+	       style="?android:attr/buttonBarButtonStyle"
 	       android:layout_width="wrap_content"
 	       android:layout_height="wrap_content"
 	       android:layout_alignParentLeft="true"
 	       android:layout_centerVertical="true"
 	       android:layout_margin="10dp"
-	       android:gravity="left|center_vertical" />
-	    -->
+	       android:gravity="left|center_vertical"
+	       android:text="Invite Friends" />
+	    
 
 	   <Button
 	       android:id="@+id/backButton"

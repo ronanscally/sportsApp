@@ -67,7 +67,7 @@ public abstract class BaseListElement {
 	    	eventName = eventObject.getString("eventName");
 	    	// TODO get readable location
 	    	eventLocation = eventObject.getString("eventID");
-	    	eventTime = eventObject.getString("time");
+	    	eventTime = eventObject.getString("startTime");
 	    	eventDate = eventObject.getString("date");
     	}catch(JSONException e1){
     		e1.printStackTrace();

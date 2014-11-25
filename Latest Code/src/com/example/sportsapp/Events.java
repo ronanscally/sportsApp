@@ -62,6 +62,8 @@ public class Events extends FragmentActivity {
         {
         	UserID 		= savedInstanceState.getString("UserID");
         }else{
+        	Intent intent = getIntent();
+        	UserID 		= intent.getStringExtra(R.string.EXTRA_PREFIX + "userID");
         }
         
         uiHelper = new UiLifecycleHelper(this, callback);

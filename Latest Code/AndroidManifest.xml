@@ -178,6 +178,14 @@
 		                android:name="android.support.PARENT_ACTIVITY"
 		                android:value=".ViewEventActivity" />            
 		        </activity>
+			<activity
+	            android:name=".InviteFriends"
+	            android:label="Invite Friends"
+	            android:parentActivityName=".Events"  >
+	            <meta-data
+	                android:name="android.support.PARENT_ACTIVITY"
+	                android:value=".Events" />            
+		    </activity>
 		        
 		<meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
 		<!-- 

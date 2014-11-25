@@ -32,8 +32,8 @@ public class ShowMap extends FragmentActivity {
 //    if (savedInstanceState != null) {
 //    }else{
     	EventName 		=  intent.getStringExtra(R.string.EXTRA_PREFIX + "EventName");
-		double lng 		=  intent.getDoubleExtra(R.string.EXTRA_PREFIX + "Lng", 0);
-		double lat 		=  intent.getDoubleExtra(R.string.EXTRA_PREFIX + "Lat", 0);
+		double lng 		=  intent.getDoubleExtra(R.string.EXTRA_PREFIX + "lng", 0);
+		double lat 		=  intent.getDoubleExtra(R.string.EXTRA_PREFIX + "lat", 0);
 		Location = new LatLng(lng,lat);
 //    }
     
@@ -52,7 +52,7 @@ public class ShowMap extends FragmentActivity {
     // Move the camera instantly to hamburg with a zoom of 15.
 //    map.moveCamera(CameraUpdateFactory.newLatLngZoom(HAMBURG, 15));
     
-    Marker eventLocation = map.addMarker(new MarkerOptions().position(Location)
+    map.addMarker(new MarkerOptions().position(Location)
         .title(EventName));
     map.moveCamera(CameraUpdateFactory.newLatLngZoom(Location, 15));
 

@@ -407,7 +407,6 @@ public class MainActivity extends FragmentActivity {
     }
 
 	protected boolean createUser(GraphUser user) {
-		// TODO Auto-generated method stub
 		String message 		= null;
     	int success 		= 0;
     	
@@ -462,7 +461,6 @@ public class MainActivity extends FragmentActivity {
     		try {
     			responseObject = responseArray.getJSONObject(0);
     		} catch (JSONException e1) {
-    			// TODO Auto-generated catch block
     			e1.printStackTrace();
     		}
 	    	try {

@@ -17,5 +17,10 @@
     
     
     
+    <string name="getFriends"	>http://csiserver.ucd.ie/~09333541/sportsapp/friends/listFriends.php</string>
+    <string name="inviteUser"	>http://csiserver.ucd.ie/~09333541/sportsapp/events/inviteUser.php</string>
+    
+    
+    
 
 </resources>

@@ -21,7 +21,7 @@ import android.widget.TextView;
 public class ViewEventFragment extends Fragment {
 
 	private static final String TAG = "ViewEventsFragment";
-//	private String UserID;
+	private String UserID;
 //	private String EventID;
 //	private String HostID;
 	private String EventName;
@@ -43,6 +43,7 @@ public class ViewEventFragment extends Fragment {
 	private TextView text_peopleRequired;
 	private TextView text_location;
 	private Button showMapButton;
+	private Button inviteButton;
 
     public interface ButtonPressedCallback {
         void onButtonPressed(String id);
@@ -74,9 +75,8 @@ public class ViewEventFragment extends Fragment {
         View view = inflater.inflate(R.layout.view_event, container, false);
 		
 		// TODO saved instance state
-//		Intent intent = getActivity().getIntent();
-//	    UserID 		= intent.getStringExtra(R.string.EXTRA_PREFIX + "userID");
-//	    EventID 	= Events.getEventID();
+		Intent intent = getActivity().getIntent();
+	    UserID 		= intent.getStringExtra(R.string.EXTRA_PREFIX + "userID");
 	    
 	    text_eventName 				= (TextView) view.findViewById(R.id.eventName);
     	text_eventStartTime 		= (TextView) view.findViewById(R.id.eventStartTime);
@@ -108,7 +108,21 @@ public class ViewEventFragment extends Fragment {
                 }
             }
         });
-		
+    	
+    	inviteButton	= (Button)	view.findViewById(R.id.inviteButton);
+    	inviteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            	Intent intent = new Intent(getActivity(), InviteFriends.class);
+            	intent.putExtra(R.string.EXTRA_PREFIX + "userID", UserID);
+            	String eventID = Events.getEventID();
+            	Log.d(TAG,"EventID: "+eventID);
+            	intent.putExtra(R.string.EXTRA_PREFIX + "eventID", eventID);
+            	startActivity(intent);
+            }
+        });
+    	
+    	
 		return view;
         
         

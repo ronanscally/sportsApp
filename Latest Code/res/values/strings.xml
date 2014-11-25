@@ -70,5 +70,39 @@
         <item>Invited</item>
         <item>Hosting</item>
     </string-array>
-
+    
+    <string-array name="event_locations">
+        <item>UCD Bowl</item>
+        <item>UCD Sports Hall B</item>
+        <item>UCD Swimming Pool</item>
+        <item>Herbert Park</item>
+        <item>Rosses Point Golf Club (Sligo)</item>
+    </string-array>
+    
+    <string-array name="sport_names">
+        <item>American Football</item>
+        <item>Athletics</item>
+        <item>Badminton</item>
+        <item>Baseball</item>
+        <item>Basketball</item>
+        <item>Cricket</item>
+        <item>Cycling</item>
+        <item>Darts</item>
+        <item>Gaelic Football</item>
+        <item>Golf</item>
+        <item>Handball</item>
+        <item>Hockey</item>
+        <item>Hurling</item>
+        <item>Ice Hockey</item>
+        <item>Rugby</item>
+        <item>Sailing</item>
+        <item>Snooker</item>
+        <item>Soccer</item>
+        <item>Squash</item>
+        <item>Surfing</item>
+        <item>Swimming</item>
+        <item>Tennis</item>
+        <item>Ultimate Frisbee</item>
+        <item>Volleyball</item>
+	</string-array>
 </resources>
