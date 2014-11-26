@@ -57,12 +57,21 @@
     <string name="button_edit_group">Edit Group</string>
     <string name="button_view_members">View Members</string>
     
+    <string name="button_add_a_friend">Add a Friend</string>
+    
+
+    <string name="button_other_friends">Other Friends</string>
+    
     <string name="profile_picture">Profile Picture</string>
     
+    <string name="title_activity_listfriendsactivity">Profile Picture</string>
     
     <!-- Map String -->
     <string name="button_show_map">Show Map</string>
     <string name="title_activity_show_map">Show Map</string>
+    
+    
+    <string name="title_activity_addafriendactivity">Add A Friend</string>
     
     
     <string-array name="events_type">

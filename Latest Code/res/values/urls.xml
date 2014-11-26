@@ -15,7 +15,10 @@
     <string name="deleteEvent"	>http://csiserver.ucd.ie/~09333541/sportsapp/events/deleteEvent.php</string>
     <string name="listEvents"	>http://csiserver.ucd.ie/~09333541/sportsapp/events/listEvents.php</string>
     
-    
+    <!-- Friends -->
+    <string name="listFriends"	>http://csiserver.ucd.ie/~09333541/sportsapp/friends/listFriends.php</string>
+    <string name="otherUsers"	>http://csiserver.ucd.ie/~09333541/sportsapp/friends/listNonFriends.php</string>
+    <string name="addFriend"	>http://csiserver.ucd.ie/~09333541/sportsapp/friends/addFriend.php</string>
     
     <string name="getFriends"	>http://csiserver.ucd.ie/~09333541/sportsapp/friends/listFriends.php</string>
     <string name="inviteUser"	>http://csiserver.ucd.ie/~09333541/sportsapp/events/inviteUser.php</string>

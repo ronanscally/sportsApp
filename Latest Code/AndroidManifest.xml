@@ -187,6 +187,26 @@
 	                android:value=".Events" />            
 		    </activity>
 		        
+		        <activity
+		            android:name=".ListFriendsActivity"
+		            android:label="@string/title_activity_listfriendsactivity"
+		            android:parentActivityName=".MainActivity"  >
+		            <meta-data
+		                android:name="android.support.PARENT_ACTIVITY"
+		                android:value=".MainActivity" />            
+		        </activity>
+		        
+		        <activity
+		            android:name=".AddAFriendActivity"
+		            android:label="@string/title_activity_addafriendactivity"
+		            android:parentActivityName=".ListFriendsActivity"  >
+		            <meta-data
+		                android:name="android.support.PARENT_ACTIVITY"
+		                android:value=".ListFriendsActivity" />            
+		        </activity>
+		        
+		        
+		        
 		<meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
 		<!-- 
 		<provider android:authorities="com.facebook.app.NativeAppCallContentProvider1521883898051595" 

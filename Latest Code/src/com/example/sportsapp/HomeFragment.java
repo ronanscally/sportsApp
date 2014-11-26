@@ -40,7 +40,7 @@ public class HomeFragment extends Fragment {
 	private Button viewEventsButton;
 	private Button viewGroupsButton;
 	private Button viewInvitationsButton;
-//	private Button viewFriendsButton;
+	private Button viewFriendsButton;
 	
 //	private MainActivity activity = null;
 	
@@ -80,7 +80,7 @@ public class HomeFragment extends Fragment {
         viewEventsButton 		= (Button) view.findViewById(R.id.view_events);
         viewGroupsButton 		= (Button) view.findViewById(R.id.view_groups);
         viewInvitationsButton 	= (Button) view.findViewById(R.id.view_invitations);
-//        viewFriendsButton 		= (Button) view.findViewById(R.id.view_friends);
+        viewFriendsButton 		= (Button) view.findViewById(R.id.view_friends);
         
         profilePictureView.setCropped(true);
 		
@@ -130,6 +130,36 @@ public class HomeFragment extends Fragment {
             	startActivity(intent);
             }
         });
+        
+        
+        viewFriendsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            	Intent intent = new Intent(getActivity(), ListFriendsActivity.class);
+            	intent.putExtra(R.string.EXTRA_PREFIX + "userID", UserID);
+            	startActivity(intent);
+            }
+        });
+        
+        
+        
+        /*
+        public void ListFriendsActivity (View view) {
+    		Log.d("LOG_TAG", "GetFriends called from View Events Activity");
+    		Intent intent = new Intent(getActivity(), ShowMap.class);
+    		
+    		//Log.d("Intent",intent.toString());
+        	//EditText userID = (EditText) findViewById(R.id.userID);
+        	//intent.putExtra("longitude", longitude);
+        	//intent.putExtra("latitude", latitude);
+        	//Log.d("Intent",intent.toString());
+    		
+    		intent.putExtra("UserID", UserID);
+        	startActivity(intent);
+        	
+    	}
+    	*/
+        
         
         return view;
     }
