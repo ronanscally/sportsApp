@@ -34,30 +34,30 @@
                 "success"   => "1",
                 "message"   => "Participant invited. ",
             );
-
             // Send notification to invited users device
-            $query  = 'SELECT userDevices.device, events.title ';
-            $query .= 'FROM `userDevices` ';
-            $query .= 'INNER JOIN events on events.eventID='.$eventID.' ';
-            $query .= 'WHERE userDevices.userID='.$userID.' ;';
-            $result = mysqli_query($connection->myconn, $query);
+            if ($decoded['sendNotification']) {
+                $query  = 'SELECT userDevices.device, events.title ';
+                $query .= 'FROM `userDevices` ';
+                $query .= 'INNER JOIN events on events.eventID='.$eventID.' ';
+                $query .= 'WHERE userDevices.userID='.$userID.' ;';
+                $result = mysqli_query($connection->myconn, $query);
 
-            // Check if successful
-            while ($row = mysqli_fetch_assoc($result)) {
-                $eventName  = $row['title'];
-                $deviceID   = $row['device'];
+                // Check if successful
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $eventName  = $row['title'];
+                    $deviceID   = $row['device'];
 
-                $message = 'You have been invited to '.$eventName.'! ';
+                    $message = 'You have been invited to '.$eventName.'! ';
 
-                // Build notification
-                $notification = array(
-                  'eventInvite' => $message,
-                );
+                    // Build notification
+                    $notification = array(
+                      'eventInvite' => $message,
+                    );
 
-                // Send notification
-                sendGoogleCloudMessage($notification, array($deviceID));
+                    // Send notification
+                    sendGoogleCloudMessage($notification, array($deviceID));
+                }
             }
-
         } else {
             $response[] = array (
                 "success"   => "-1",

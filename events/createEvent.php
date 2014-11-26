@@ -29,7 +29,7 @@
         $peopleReqd = $decoded['numReqd'];
 
         // mySQL add user to database
-        $query = 'INSERT INTO events(hostID, title, sport, startTime, endTime, peopleRequired) VALUES ('.$eventHost.',\''.$eventTitle.'\',\''.$sport.'\',\''.$startTime.'\',\''.$endTime.'\','.$peopleReqd.');';
+        $query = 'INSERT INTO events(hostID, title, sport, startTime, endTime, peopleRequired) VALUES ('.$eventHost.',\''.$eventTitle.'\',\''.$sport.'\',FROM_UNIXTIME('.$startTime.')/1000,FROM_UNIXTIME('.$endTime.')/1000,'.$peopleReqd.');';
         $result = mysqli_query($connection->myconn, $query);
 
         // Check if successful

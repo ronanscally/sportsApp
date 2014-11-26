@@ -10,6 +10,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
@@ -138,9 +140,14 @@ public class GcmIntentService extends IntentService {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, GCM_Registration.class), 0);
+        Intent showIntent = new Intent(this, MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, showIntent, 0);
+        
+//        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+//                new Intent(this, GCM_Registration.class), 0);
 
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
         .setSmallIcon(R.drawable.ic_launcher)
@@ -151,7 +158,13 @@ public class GcmIntentService extends IntentService {
         .setDefaults(Notification.DEFAULT_LIGHTS| Notification.DEFAULT_VIBRATE| Notification.DEFAULT_SOUND)
         .setContentText(notificationMsg);
 
-        mBuilder.setContentIntent(contentIntent);
+
+        mBuilder.setContentIntent(contentIntent);        
+        mBuilder.setAutoCancel(true);
+        mBuilder.setSound(alarmSound);
+        long[] pattern = {0, 100, 1000, 300, 200, 100, 500, 200, 100};
+        mBuilder.setVibrate(pattern);
+
         mNotificationManager.notify((int) when, mBuilder.build());
     }
     
@@ -162,9 +175,11 @@ public class GcmIntentService extends IntentService {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, GCM_Registration.class), 0);
-
+//        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+//                new Intent(this, GCM_Registration.class), 0);
+        Intent showIntent = new Intent(this, MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, showIntent, 0);
+        
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
         .setSmallIcon(R.drawable.ic_launcher)
@@ -175,7 +190,13 @@ public class GcmIntentService extends IntentService {
         .setDefaults(Notification.DEFAULT_LIGHTS| Notification.DEFAULT_VIBRATE| Notification.DEFAULT_SOUND)
         .setContentText(notificationMsg);
 
-        mBuilder.setContentIntent(contentIntent);
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        mBuilder.setContentIntent(contentIntent);        
+        mBuilder.setAutoCancel(true);
+        mBuilder.setSound(alarmSound);
+        long[] pattern = {0, 100, 1000, 300, 200, 100, 500, 200, 100};
+        mBuilder.setVibrate(pattern);
+
         mNotificationManager.notify((int) when, mBuilder.build());
     }
     
@@ -199,8 +220,15 @@ public class GcmIntentService extends IntentService {
         .bigText(notificationMsg))
         .setDefaults(Notification.DEFAULT_LIGHTS| Notification.DEFAULT_VIBRATE| Notification.DEFAULT_SOUND)
         .setContentText(notificationMsg);
-
+        
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        mBuilder.setContentIntent(contentIntent);        
+        mBuilder.setAutoCancel(true);
+        mBuilder.setSound(alarmSound);
+        long[] pattern = {0, 100, 1000, 300, 200, 100, 500, 200, 100};
+        mBuilder.setVibrate(pattern);
         mBuilder.setContentIntent(contentIntent);
+        
         mNotificationManager.notify((int) when, mBuilder.build());
     }
 }
