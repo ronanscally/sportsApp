@@ -26,7 +26,7 @@ public class SplashFragment extends Fragment {
         View view = inflater.inflate(R.layout.splash, container, false);
 
         loginButton = (LoginButton) view.findViewById(R.id.login_button);
-        loginButton.setReadPermissions("user_friends");
+        loginButton.setReadPermissions("user_friends","user_birthday");
 
         skipLoginButton = (TextView) view.findViewById(R.id.skip_login_button);
         skipLoginButton.setOnClickListener(new View.OnClickListener() {

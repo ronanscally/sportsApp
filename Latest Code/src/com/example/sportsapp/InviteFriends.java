@@ -152,6 +152,7 @@ public class InviteFriends extends ActionBarActivity {
     	try {
 			request.put("eventID", eventID);
 			request.put("userID", friend_userID);
+			request.put("sendNotification", true);
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}

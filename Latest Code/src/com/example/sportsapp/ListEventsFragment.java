@@ -50,9 +50,11 @@ public class ListEventsFragment extends Fragment {
 	GPSTracker gps;
 	private double latitude = 0;
 	private double longitude = 0;
-	
+
 	private JSONArray UserEventsJSONArray;
-	private boolean EventsPresent = false;
+	private boolean UserEventsPresent = false;
+	private JSONArray NearbyEventsJSONArray;
+	private boolean NearbyEventsPresent = false;
 	
 	private ButtonPressedCallback createPressedCallback;
 	private ButtonPressedCallback viewEventPressedCallback;
@@ -99,7 +101,7 @@ public class ListEventsFragment extends Fragment {
 	    latitude =  gps.getLatitude();
 		longitude = gps.getLongitude();
 		
-		nearbyButton.setText("Nearby Events");
+//		nearbyButton.setText("Nearby Events");
 		
 		adapter = ArrayAdapter.createFromResource(getActivity(),
 		        R.array.events_type, android.R.layout.simple_spinner_item);
@@ -115,26 +117,7 @@ public class ListEventsFragment extends Fragment {
 		nearbyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            	try{
-	            	yourEventsButton.setVisibility(View.VISIBLE);
-	            	nearbyButton.setVisibility(View.GONE);
-	            	buttonBar.setVisibility(View.GONE);
-	            	JSONObject request = new JSONObject();
-	            	request.put("userID", UserID);
-	        		request.put("lng", longitude);
-	        		request.put("lat", latitude);
-	        		// Send to server
-	            	JSONfunctions.setRequestObject(request);
-	            	String save_location = getString(R.string.saveLocation);
-	            	new JSONfunctions().execute(save_location);
-            	}catch(JSONException e){
-            		System.out.println("Send Location to server");
-            		e.printStackTrace();
-            	}catch(Exception e){
-            		System.out.println("General Error");
-            		e.printStackTrace();
-            		
-            	}
+            	viewNearbyEvents();
             }
         });
 		
@@ -144,6 +127,26 @@ public class ListEventsFragment extends Fragment {
             	yourEventsButton.setVisibility(View.GONE);
             	nearbyButton.setVisibility(View.VISIBLE);
             	buttonBar.setVisibility(View.VISIBLE);
+            	
+            	// Attach the events to the list
+            	noEventsText.setVisibility(View.GONE);
+        		listView.setVisibility(View.GONE);
+        		listElements = new ArrayList<BaseListElement>();
+        		if(UserEventsPresent){ // Add events to list if present
+        			for (int i = 0; i < UserEventsJSONArray.length(); i++) {
+        				try {
+        					listElements.add(new EventListElement(UserEventsJSONArray.getJSONObject(i)));
+        				} catch (JSONException e) {
+        					e.printStackTrace();
+        				}
+        			}
+        			listView.setVisibility(View.VISIBLE);
+        		}else{
+        			// Set no events element to be visible
+        			noEventsText.setVisibility(View.VISIBLE);
+        		}
+        		
+        		listView.setAdapter(new ActionListAdapter(getActivity(), R.id.eventsList, listElements));
             }
         });
 		
@@ -160,7 +163,7 @@ public class ListEventsFragment extends Fragment {
 		noEventsText.setVisibility(View.GONE);
 		listView.setVisibility(View.GONE);
 		listElements = new ArrayList<BaseListElement>();
-		if(EventsPresent){ // Add events to list if present
+		if(UserEventsPresent){ // Add events to list if present
 			for (int i = 0; i < UserEventsJSONArray.length(); i++) {
 				try {
 					listElements.add(new EventListElement(UserEventsJSONArray.getJSONObject(i)));
@@ -187,6 +190,145 @@ public class ListEventsFragment extends Fragment {
         
 	}
 	
+	protected void viewNearbyEvents() {
+    	yourEventsButton.setVisibility(View.VISIBLE);
+    	nearbyButton.setVisibility(View.GONE);
+    	buttonBar.setVisibility(View.GONE);
+		// Send location to server
+    	sendLocationToServer();
+    	// Get nearby events
+    	getNearbyEvents();
+    	
+    	// Attach the events to the list
+    	noEventsText.setVisibility(View.GONE);
+		listView.setVisibility(View.GONE);
+		listElements = new ArrayList<BaseListElement>();
+		if(NearbyEventsPresent){ // Add events to list if present
+			for (int i = 0; i < NearbyEventsJSONArray.length(); i++) {
+				try {
+					listElements.add(new EventListElement(NearbyEventsJSONArray.getJSONObject(i)));
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+			listView.setVisibility(View.VISIBLE);
+		}else{
+			// Set no events element to be visible
+			noEventsText.setVisibility(View.VISIBLE);
+		}
+		listView.setAdapter(new ActionListAdapter(getActivity(), R.id.eventsList, listElements));
+	}
+
+	private boolean getNearbyEvents() {
+    	JSONfunctions.clearResponseBuffer();
+		
+    	String message 		= null;
+    	int success 		= 0;
+    	
+    	JSONObject request = new JSONObject();
+    	 
+    	try {
+			request.put("userID", UserID);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+    	Log.d(TAG,"Request: " + request.toString());
+    	
+    	JSONfunctions.setRequestObject(request);
+    	new JSONfunctions().execute(getString(R.string.getNearbyEvents));
+
+    	long timeStart = System.currentTimeMillis();
+    	boolean timeout = false;
+    	int timeoutSeconds = 10;
+    	JSONArray responseArray = null;
+    	while (true){
+    		if(timeStart + timeoutSeconds*1000 < System.currentTimeMillis()){	// Timeout (10seconds...)
+    			Log.d("Server","No server response.");
+    			Log.d("Server","Timeout triggered after " + timeoutSeconds + " seconds");
+    			timeout = true;
+    			break;
+    		}
+    		if(JSONfunctions.checkNewResponse()){
+    			responseArray = JSONfunctions.getResponseArray();
+    			break;
+    		}
+    	}
+    	
+    	if(!timeout){
+    		if(responseArray == null){
+        		Log.d(TAG,"Null response recieved");
+        		UserEventsJSONArray = responseArray;
+        		NearbyEventsPresent = false;
+        		return true;
+        	}else{
+        		Log.d(TAG,responseArray.toString());
+	        	JSONObject responseObject = null;
+	    		try {
+	    			responseObject = responseArray.getJSONObject(0);
+	    		} catch (JSONException e1) {
+	    			// TODO Auto-generated catch block
+	    			e1.printStackTrace();
+	    		}
+		    	try {
+		    		success 	= responseObject.getInt("success");
+		    		message 	= responseObject.getString("message");
+		    	} catch (JSONException e) {
+		    		e.printStackTrace();
+		    	}
+		    	
+		    	if(success == 1) // Events exists, get data
+		    	{
+		    		NearbyEventsJSONArray = responseArray;
+		    		NearbyEventsPresent = true;
+		    	}else{
+		    		// TODO if events doesn't exist.
+		    		return false;
+		    	}
+		    	return true;
+        	}
+    	}
+		return false;
+	}
+
+	private void sendLocationToServer() {
+		try{
+			JSONfunctions.clearResponseBuffer();
+			JSONObject request = new JSONObject();
+	    	request.put("userID", UserID);
+			request.put("lng", longitude);
+			request.put("lat", latitude);
+	    	JSONfunctions.setRequestObject(request);
+	    	String save_location = getString(R.string.saveLocation);
+	    	new JSONfunctions().execute(save_location);
+	    	
+	    	long timeStart = System.currentTimeMillis();
+//	    	boolean timeout = false;
+	    	int timeoutSeconds = 10;
+//	    	JSONArray responseArray = null;
+	    	while (true){
+	    		if(timeStart + timeoutSeconds*1000 < System.currentTimeMillis()){	// Timeout (10seconds...)
+	    			Log.d("Server","No server response.");
+	    			Log.d("Server","Timeout triggered after " + timeoutSeconds + " seconds");
+//	    			timeout = true;
+	    			break;
+	    		}
+	    		if(JSONfunctions.checkNewResponse()){
+//	    			responseArray = JSONfunctions.getResponseArray();
+	    			break;
+	    		}
+	    	}
+	    	
+		}catch(JSONException e){
+			System.out.println("Send Location to server");
+			e.printStackTrace();
+		}catch(Exception e){
+			System.out.println("General Error");
+			e.printStackTrace();
+			
+		}
+	}
+
 	public void createGroup(View view) {
     	Intent intent = new Intent(getActivity(), CreateGroupActivity.class);
     	startActivity(intent);
@@ -228,6 +370,7 @@ public class ListEventsFragment extends Fragment {
                 TextView text1 = (TextView) view.findViewById(R.id.text1);
                 TextView text2 = (TextView) view.findViewById(R.id.text2);
                 TextView text3 = (TextView) view.findViewById(R.id.text3);
+                TextView text4 = (TextView) view.findViewById(R.id.text4);
                 if (icon != null) {
                     icon.setImageDrawable(listElement.getIcon());
                 }
@@ -248,6 +391,14 @@ public class ListEventsFragment extends Fragment {
                         text3.setText(listElement.getText3());
                     } else {
                         text3.setVisibility(View.GONE);
+                    }
+                }
+                if (text4 != null) {
+                    if (listElement.getText4() != null) {
+                        text4.setVisibility(View.VISIBLE);
+                        text4.setText(listElement.getText4());
+                    } else {
+                        text4.setVisibility(View.GONE);
                     }
                 }
             }
@@ -332,7 +483,7 @@ public class ListEventsFragment extends Fragment {
     		if(responseArray == null){
         		Log.d(TAG,"Null response recieved");
         		UserEventsJSONArray = responseArray;
-        		EventsPresent = false;
+        		UserEventsPresent = false;
         		return true;
         	}else{
         		Log.d(TAG,responseArray.toString());
@@ -353,7 +504,7 @@ public class ListEventsFragment extends Fragment {
 		    	if(success == 1) // Events exists, get data
 		    	{
 		    		UserEventsJSONArray = responseArray;
-		    		EventsPresent = true;
+		    		UserEventsPresent = true;
 		    	}else{
 		    		// TODO if events doesn't exist.
 		    		return false;

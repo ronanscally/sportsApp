@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.BaseAdapter;
 import com.facebook.model.OpenGraphAction;
@@ -61,14 +62,14 @@ public abstract class BaseListElement {
     	this.icon  = sportIcon;
     	String eventName = null;
     	String eventLocation = null;
-    	String eventDate = null;
     	String eventTime = null;
+    	String eventDate = null;
     	try{
 	    	eventName = eventObject.getString("eventName");
 	    	// TODO get readable location
-	    	eventLocation = eventObject.getString("eventID");
+	    	eventLocation = eventObject.getString("distance");
 	    	eventTime = eventObject.getString("startTime");
-	    	eventDate = eventObject.getString("date");
+	    	eventDate = eventObject.getString("startDate");
     	}catch(JSONException e1){
     		e1.printStackTrace();
     	}

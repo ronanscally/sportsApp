@@ -47,7 +47,6 @@ public class HomeFragment extends Fragment {
 	private String UserID = null;
 //	private boolean pendingAnnounce;
 
-//TODO ask mark about these default values
 	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 	public static final String PROPERTY_REG_ID = "registration_id";
 	private static final String PROPERTY_APP_VERSION = "appVersion";
@@ -84,7 +83,6 @@ public class HomeFragment extends Fragment {
         
         profilePictureView.setCropped(true);
 		
-		// Put in from Mark
 		Session session = Session.getActiveSession();
         if (session != null && session.isOpened()) {
             // Get the user's data
@@ -131,7 +129,6 @@ public class HomeFragment extends Fragment {
             }
         });
         
-        
         viewFriendsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -140,26 +137,6 @@ public class HomeFragment extends Fragment {
             	startActivity(intent);
             }
         });
-        
-        
-        
-        /*
-        public void ListFriendsActivity (View view) {
-    		Log.d("LOG_TAG", "GetFriends called from View Events Activity");
-    		Intent intent = new Intent(getActivity(), ShowMap.class);
-    		
-    		//Log.d("Intent",intent.toString());
-        	//EditText userID = (EditText) findViewById(R.id.userID);
-        	//intent.putExtra("longitude", longitude);
-        	//intent.putExtra("latitude", latitude);
-        	//Log.d("Intent",intent.toString());
-    		
-    		intent.putExtra("UserID", UserID);
-        	startActivity(intent);
-        	
-    	}
-    	*/
-        
         
         return view;
     }

@@ -73,15 +73,19 @@
 	       android:text="+ Create" />
 	
 	</RelativeLayout>
-     
-     <com.example.sportsapp.FullListView
-	            android:id="@+id/eventsList"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_margin="20dp"
-	            android:dividerHeight="10dip"
-	            android:divider="#00000000"/>
-     
+     <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+         >
+	     <com.example.sportsapp.FullListView
+		            android:id="@+id/eventsList"
+		            android:layout_width="fill_parent"
+		            android:layout_height="wrap_content"
+		            android:dividerHeight="10dip"
+            		android:layout_marginLeft="20dp" 
+            		android:layout_marginRight="20dp" 
+		            android:divider="#00000000"/>
+     </ScrollView>
      <TextView
 		    android:id="@+id/noEventsText" 
 		    android:layout_height="60dip"

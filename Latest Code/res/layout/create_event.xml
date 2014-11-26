@@ -115,14 +115,11 @@
 				android:gravity="left|center_vertical" 
 				android:text="Start Time" />
 		
-			<EditText
-			    android:id="@+id/startDate"
-				android:layout_width="wrap_content"
+			<Button 
+			    android:id="@+id/pickStartDateButton"
+			    android:layout_width="wrap_content" 
 			    android:layout_height="wrap_content"
-			    android:layout_margin="10dp"
-			    android:gravity="left|center_vertical"
-			    android:hint="date...(picker)" >
-			</EditText>
+			    android:text="Pick Date" />
 		</LinearLayout>
 		<LinearLayout 
 	        android:layout_width="0dp"
@@ -135,15 +132,11 @@
 				android:layout_margin="10dp"
 				android:gravity="left|center_vertical" 
 				android:text="" />
-		
-			<EditText
-			    android:id="@+id/startTime"
-			    android:layout_width="wrap_content"
+			<Button 
+			    android:id="@+id/pickStartTimeButton"
+			    android:layout_width="wrap_content" 
 			    android:layout_height="wrap_content"
-			    android:layout_margin="10dp"
-			    android:gravity="left|center_vertical"
-			    android:hint="time">
-			</EditText>
+			    android:text="Pick Time" />
 		</LinearLayout>
 	</LinearLayout>
 	
@@ -164,14 +157,11 @@
 				android:gravity="left|center_vertical" 
 				android:text="End Time" />
 		
-			<EditText
-			    android:id="@+id/endDate"
-				android:layout_width="wrap_content"
+			<Button 
+			    android:id="@+id/pickEndDateButton"
+			    android:layout_width="wrap_content" 
 			    android:layout_height="wrap_content"
-			    android:layout_margin="10dp"
-			    android:gravity="left|center_vertical"
-			    android:hint="date...(picker)" >
-			</EditText>
+			    android:text="Pick Date" />
 		</LinearLayout>
 		<LinearLayout 
 	        android:layout_width="0dp"
@@ -184,15 +174,11 @@
 				android:layout_margin="10dp"
 				android:gravity="left|center_vertical" 
 				android:text="" />
-		
-			<EditText
-			    android:id="@+id/endTime"
-			    android:layout_width="wrap_content"
+			<Button 
+			    android:id="@+id/pickEndTimeButton"
+			    android:layout_width="wrap_content" 
 			    android:layout_height="wrap_content"
-			    android:layout_margin="10dp"
-			    android:gravity="left|center_vertical"
-			    android:hint="time">
-			</EditText>
+			    android:text="Pick Time" />
 		</LinearLayout>
 	</LinearLayout>
 	
@@ -205,14 +191,13 @@
 		android:gravity="left|center_vertical" 
 		android:text="Players Required" />
 
-	<EditText
+	<Spinner
 	    android:id="@+id/playersRequired"
-	    android:layout_width="match_parent"
+	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_margin="10dp"
-	    android:gravity="left|center_vertical"
-	    android:hint="players required... (spinner)" >
-	</EditText>
+	    android:gravity="left|center_vertical" >
+	</Spinner>
 	
 	<TextView
 		android:layout_width="wrap_content"

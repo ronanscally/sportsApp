@@ -64,7 +64,7 @@
     
     <string name="profile_picture">Profile Picture</string>
     
-    <string name="title_activity_listfriendsactivity">Profile Picture</string>
+    <string name="title_activity_listfriendsactivity">Friends</string>
     
     <!-- Map String -->
     <string name="button_show_map">Show Map</string>

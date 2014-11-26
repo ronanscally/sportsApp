@@ -14,6 +14,7 @@
     <string name="createEvent"	>http://csiserver.ucd.ie/~09333541/sportsapp/events/createEvent.php</string>
     <string name="deleteEvent"	>http://csiserver.ucd.ie/~09333541/sportsapp/events/deleteEvent.php</string>
     <string name="listEvents"	>http://csiserver.ucd.ie/~09333541/sportsapp/events/listEvents.php</string>
+    <string name="getNearbyEvents">http://csiserver.ucd.ie/~09333541/sportsapp/events/getNearbyEvents.php</string>
     
     <!-- Friends -->
     <string name="listFriends"	>http://csiserver.ucd.ie/~09333541/sportsapp/friends/listFriends.php</string>
