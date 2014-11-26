@@ -25,19 +25,31 @@
 
       // mySQL get records
       // To return date as dd/mm/yyyy
-      $query  = 'SELECT events.eventID, events.sport, events.title, sports.sportID, eventCoords.lat,  eventCoords.lng,  eventCoords.name as placeName, eventCoords.address, userLocation.lat, userLocation.lng, ';
-      $query .= "(DATE_FORMAT(events.startTime, '%d/%m/%Y')) AS startDate, (DATE_FORMAT(events.startTime, '%H:%i')) AS startTime, ";
-      $query .= "(DATE_FORMAT(events.startTime, '%W')) AS startDay, ";
-      $query .= "(DATE_FORMAT(events.endTime, '%d/%m/%Y')) AS endDate, (DATE_FORMAT(events.endTime, '%H:%i')) AS endTime, ";
-      $query .= "(DATE_FORMAT(events.endTime, '%W')) AS endDay, ";
-      $query .= '(ROUND( 6371 * acos( cos( radians(userLocation.lat) ) * cos( radians(eventCoords.lat ) ) * cos( radians( eventCoords.lng ) - radians(userLocation.lng) ) + sin( radians(userLocation.lat) ) * sin( radians(eventCoords.lat ) ) ) ,1) ) as distance_km ';
+      // $query  = 'SELECT events.eventID, events.sport, events.title, sports.sportID, eventCoords.lat,  eventCoords.lng,  eventCoords.name as placeName, eventCoords.address, userLocation.lat, userLocation.lng, eventParticipants.attendingStatus ';
+      // $query .= "(DATE_FORMAT(events.startTime, '%d/%m/%Y')) AS startDate, (DATE_FORMAT(events.startTime, '%H:%i')) AS startTime, ";
+      // $query .= "(DATE_FORMAT(events.startTime, '%W')) AS startDay, ";
+      // $query .= "(DATE_FORMAT(events.endTime, '%d/%m/%Y')) AS endDate, (DATE_FORMAT(events.endTime, '%H:%i')) AS endTime, ";
+      // $query .= "(DATE_FORMAT(events.endTime, '%W')) AS endDay, ";
+      // $query .= '(ROUND( 6371 * acos( cos( radians(userLocation.lat) ) * cos( radians(eventCoords.lat ) ) * cos( radians( eventCoords.lng ) - radians(userLocation.lng) ) + sin( radians(userLocation.lat) ) * sin( radians(eventCoords.lat ) ) ) ,1) ) as distance_km ';
+      // $query .= 'FROM  `publicEvents` ';
+      // $query .= 'INNER JOIN  `events`        ON publicEvents.eventID = events.eventID ';
+      // $query .= 'INNER JOIN  `eventCoords`   ON publicEvents.eventID = eventCoords.eventID ';
+      // $query .= 'INNER JOIN  `eventParticipants`  ON eventParticipants.userID = '.$userID.' ';
+      // $query .= 'INNER JOIN  `sports` ON events.sport = sports.sport ';
+      // $query .= 'INNER JOIN  `userLocation` ON userLocation.userID = '.$userID.' ';
+      // $query .= 'WHERE events.startTime > CURRENT_TIMESTAMP() ';
+      // $query .= 'HAVING distance_km < '.$userDistance_km.' ';
+      // $query .= 'ORDER BY (events.startTime) ASC ';
+
+      $query  = "SELECT events.eventID, events.sport, events.title, sports.sportID, eventCoords.lat,  eventCoords.lng,  eventCoords.name as placeName, eventCoords.address, userLocation.lat, userLocation.lng, eventParticipants.attendingStatus, (DATE_FORMAT(events.startTime, '%d/%m/%Y')) AS startDate, (DATE_FORMAT(events.startTime, '%H:%i')) AS startTime, (DATE_FORMAT(events.startTime, '%W')) AS startDay, (DATE_FORMAT(events.endTime, '%d/%m/%Y')) AS endDate, (DATE_FORMAT(events.endTime, '%H:%i')) AS endTime, (DATE_FORMAT(events.endTime, '%W')) AS endDay, (ROUND( 6371 * acos( cos( radians(userLocation.lat) ) * cos( radians(eventCoords.lat ) ) * cos( radians( eventCoords.lng ) - radians(userLocation.lng) ) + sin( radians(userLocation.lat) ) * sin( radians(eventCoords.lat ) ) ) ,1) ) as distance_km  ";
       $query .= 'FROM  `publicEvents` ';
       $query .= 'INNER JOIN  `events`        ON publicEvents.eventID = events.eventID ';
       $query .= 'INNER JOIN  `eventCoords`   ON publicEvents.eventID = eventCoords.eventID ';
+      $query .= 'LEFT OUTER JOIN  `eventParticipants`  ON  publicEvents.eventID = eventParticipants.eventID AND  eventParticipants.userID = '.$userID.' ';
       $query .= 'INNER JOIN  `sports` ON events.sport = sports.sport ';
-      $query .= 'INNER JOIN  `userLocation` ON userLocation.userID = '.$userID.' ';
-      $query .= 'WHERE events.startTime > CURRENT_TIMESTAMP() ';
-      $query .= 'HAVING distance_km < '.$userDistance_km.' ';
+      $query .= 'INNER JOIN  `userLocation` ON userLocation.userID ='.$userID.' ';
+      $query .= 'WHERE events.startTime > CURRENT_TIMESTAMP() AND eventParticipants.attendingStatus IS NULL ';
+      $query .= 'HAVING distance_km < 5  ';
       $query .= 'ORDER BY (events.startTime) ASC ';
 
       $result = mysqli_query($connection->myconn, $query);

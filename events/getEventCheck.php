@@ -10,6 +10,7 @@
     // Look up details in DB for this user ID
     $data = array (
       "eventID"    => "1234630",                      // User ID
+      "userID"    => "10153331077144992",                      // User ID
     );
 
     // Encode JSON data

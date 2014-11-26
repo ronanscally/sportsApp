@@ -20,19 +20,11 @@
     $connection->connect();
 
     // Check for required fields
-    if ($decoded['eventID']) {
+    if ($decoded['eventID'] && $decoded['userID']) {
       $eventID = $decoded['eventID'];
+      $userID  = $decoded['userID'];
 
-      // mySQL get records
-      // $query =  'SELECT events.startTime, events.endTime, events.peopleRequired, events.peopleAttending, events.hostID, events.title, events.sport, AsWKT(eventLocation.location), sports.sportID ';
-      // $query .= 'FROM  `events` ';
-      // $query .= 'INNER JOIN  `eventLocation` ON eventLocation.eventID = events.eventID ';
-      // $query .= 'INNER JOIN  `sports` ON events.sport = sports.sport ';
-      // $query .= 'WHERE events.eventID='.$eventID.' ';
-      // $query .= 'ORDER BY (events.startTime) ASC ';
-
-
-      $query =  'SELECT events.startTime, events.endTime, events.hostID, events.title, events.sport, AsWKT(eventLocation.location), sports.sportID, events.peopleRequired, COUNT(eventParticipants.userID) as numAttending, COUNT(eventParticipants.userID) = events.peopleRequired as full ';
+      $query  = 'SELECT events.startTime, events.endTime, events.hostID, events.title, events.sport, AsWKT(eventLocation.location), sports.sportID, events.peopleRequired, COUNT(eventParticipants.userID) as numAttending, COUNT(eventParticipants.userID) = events.peopleRequired as full ';
       $query .= 'FROM  `events`  ';
       $query .= 'INNER JOIN  `eventLocation` ON eventLocation.eventID = events.eventID  ';
       $query .= 'INNER JOIN  `eventParticipants` ON eventParticipants.eventID = events.eventID  ';
@@ -60,6 +52,10 @@
 
           $coords = decodePoint($location);
 
+          $query = 'SELECT eventParticipants.attendingStatus from eventParticipants WHERE eventParticipants.userID='.$userID.' AND eventParticipants.eventID='.$eventID;
+          $result = mysqli_query($connection->myconn, $query);
+          if ($row = mysqli_fetch_assoc($result)) { $attending = $row['attendingStatus']; }
+          
           // Create JSON object
           $response[] = array (
               "success"   => "1",

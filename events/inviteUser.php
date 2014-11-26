@@ -40,6 +40,7 @@
                 $query .= 'FROM `userDevices` ';
                 $query .= 'INNER JOIN events on events.eventID='.$eventID.' ';
                 $query .= 'WHERE userDevices.userID='.$userID.' ;';
+                
                 $result = mysqli_query($connection->myconn, $query);
 
                 // Check if successful

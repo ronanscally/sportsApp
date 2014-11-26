@@ -8,7 +8,7 @@
 
     // Generate JSON object
     $data = array (
-        "userID"    => "10152504871783499",              // User ID
+        "userID"    => "10153331077144992",              // User ID
         "eventID"   => "1234646",               // Event ID
     );
 

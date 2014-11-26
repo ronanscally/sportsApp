@@ -19,7 +19,7 @@
     $query .= 'SELECT events.eventID ';
     $query .= 'FROM `events` ';
     $query .= 'NATURAL LEFT JOIN publicEvents ';
-    $query .= 'WHERE events.startTime > CURRENT_TIMESTAMP() AND events.startTime <= TIMESTAMPADD(HOUR,24,CURRENT_TIMESTAMP()) AND publicEvents.eventID IS NULL ';
+    $query .= 'WHERE events.startTime > CURRENT_TIMESTAMP() AND events.startTime <= TIMESTAMPADD(HOUR,7*24,CURRENT_TIMESTAMP()) AND publicEvents.eventID IS NULL ';
 
     // Execute the query
     $result = mysqli_query($connection->myconn, $query);
