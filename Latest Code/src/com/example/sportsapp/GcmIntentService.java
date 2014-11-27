@@ -10,6 +10,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
@@ -34,6 +36,7 @@ public class GcmIntentService extends IntentService {
     public static final String TITLE_MESSAGE = "title";
     public static final String DISTANCE_MESSAGE = "distance";
     public static final String FRIEND_MESSAGE = "friendAdd";
+    public static final String EVENT_MESSAGE = "eventInvite";
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -85,6 +88,21 @@ public class GcmIntentService extends IntentService {
                 // Post notification of received message.
                 sendFriendRequestNotification(Calendar.getInstance().getTimeInMillis(), extras.getString(FRIEND_MESSAGE));
                 Log.i(TAG, "Received: " + extras.toString());
+            } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType) && (extras.containsKey(EVENT_MESSAGE))) {
+                // DELAY LOOP
+            	// This loop represents the service doing some work.
+//                for (int i = 0; i < 5; i++) {
+//                    Log.i(TAG, "Working... " + (i + 1)
+//                            + "/5 @ " + SystemClock.elapsedRealtime());
+//                    try {
+//                        Thread.sleep(5000);
+//                    } catch (InterruptedException e) {
+//                    }
+//                }
+                Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
+                // Post notification of received message.
+                sendEventInviteNotification(Calendar.getInstance().getTimeInMillis(), extras.getString(EVENT_MESSAGE));
+                Log.i(TAG, "Received: " + extras.toString());
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
@@ -122,9 +140,14 @@ public class GcmIntentService extends IntentService {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, GCM_Registration.class), 0);
+        Intent showIntent = new Intent(this, MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, showIntent, 0);
+        
+//        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+//                new Intent(this, GCM_Registration.class), 0);
 
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
         .setSmallIcon(R.drawable.ic_launcher)
@@ -135,7 +158,13 @@ public class GcmIntentService extends IntentService {
         .setDefaults(Notification.DEFAULT_LIGHTS| Notification.DEFAULT_VIBRATE| Notification.DEFAULT_SOUND)
         .setContentText(notificationMsg);
 
-        mBuilder.setContentIntent(contentIntent);
+
+        mBuilder.setContentIntent(contentIntent);        
+        mBuilder.setAutoCancel(true);
+        mBuilder.setSound(alarmSound);
+        long[] pattern = {0, 100, 1000, 300, 200, 100, 500, 200, 100};
+        mBuilder.setVibrate(pattern);
+
         mNotificationManager.notify((int) when, mBuilder.build());
     }
     
@@ -143,6 +172,39 @@ public class GcmIntentService extends IntentService {
     // This is just one simple example of what you might choose to do with
     // a GCM message.
     private void sendFriendRequestNotification(long when, String notificationMsg) {
+        mNotificationManager = (NotificationManager)
+                this.getSystemService(Context.NOTIFICATION_SERVICE);
+
+//        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+//                new Intent(this, GCM_Registration.class), 0);
+        Intent showIntent = new Intent(this, MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, showIntent, 0);
+        
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+        .setSmallIcon(R.drawable.ic_launcher)
+        .setContentTitle("PlayerX")
+        .setWhen(when)
+        .setStyle(new NotificationCompat.BigTextStyle()
+        .bigText(notificationMsg))
+        .setDefaults(Notification.DEFAULT_LIGHTS| Notification.DEFAULT_VIBRATE| Notification.DEFAULT_SOUND)
+        .setContentText(notificationMsg);
+
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        mBuilder.setContentIntent(contentIntent);        
+        mBuilder.setAutoCancel(true);
+        mBuilder.setSound(alarmSound);
+        long[] pattern = {0, 100, 1000, 300, 200, 100, 500, 200, 100};
+        mBuilder.setVibrate(pattern);
+
+        mNotificationManager.notify((int) when, mBuilder.build());
+    }
+    
+    
+    // Put the message into a notification and post it.
+    // This is just one simple example of what you might choose to do with
+    // a GCM message.
+    private void sendEventInviteNotification(long when, String notificationMsg) {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -158,8 +220,15 @@ public class GcmIntentService extends IntentService {
         .bigText(notificationMsg))
         .setDefaults(Notification.DEFAULT_LIGHTS| Notification.DEFAULT_VIBRATE| Notification.DEFAULT_SOUND)
         .setContentText(notificationMsg);
-
+        
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        mBuilder.setContentIntent(contentIntent);        
+        mBuilder.setAutoCancel(true);
+        mBuilder.setSound(alarmSound);
+        long[] pattern = {0, 100, 1000, 300, 200, 100, 500, 200, 100};
+        mBuilder.setVibrate(pattern);
         mBuilder.setContentIntent(contentIntent);
+        
         mNotificationManager.notify((int) when, mBuilder.build());
     }
 }

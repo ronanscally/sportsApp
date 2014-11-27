@@ -73,6 +73,70 @@
 	</RelativeLayout>
 	
 	<RelativeLayout 
+	    android:id="@+id/attendenceTab"
+		android:layout_width="match_parent" 
+		android:layout_height="60dip"
+		android:orientation="horizontal" 
+		style="?android:attr/buttonBarStyle">
+	   <Button
+	       android:id="@+id/declineButton"
+	       style="?android:attr/buttonBarButtonStyle"
+	       android:layout_width="wrap_content"
+	       android:layout_height="wrap_content"
+	       android:layout_alignParentLeft="true"
+	       android:layout_centerVertical="true"
+	       android:layout_margin="10dp"
+	       android:gravity="left|center_vertical"
+	       android:text="decline"
+	       android:textColor="#FF1010" />
+	   
+	   <Button
+	       android:id="@+id/acceptButton"
+	       style="?android:attr/buttonBarButtonStyle"
+	       android:layout_width="wrap_content"
+	       android:layout_height="wrap_content"
+	       android:layout_alignParentRight="true"
+	       android:layout_centerVertical="true"
+	       android:layout_margin="10dp"
+	       android:gravity="right|center_vertical"
+	       android:text="accept"
+	       android:textColor="#10E010" />
+		
+	</RelativeLayout>
+	
+	<RelativeLayout 
+	    android:id="@+id/deleteTab"
+		android:layout_width="match_parent" 
+		android:layout_height="60dip"
+		android:orientation="horizontal" 
+		style="?android:attr/buttonBarStyle">
+	   <Button
+	       android:id="@+id/deleteButton"
+	       style="?android:attr/buttonBarButtonStyle"
+	       android:layout_width="wrap_content"
+	       android:layout_height="wrap_content"
+	       android:layout_alignParentLeft="true"
+	       android:layout_centerVertical="true"
+	       android:layout_margin="10dp"
+	       android:gravity="left|center_vertical"
+	       android:text="Delete Event"
+	       android:textColor="#FF1010" />
+		
+	</RelativeLayout>
+	
+
+   <Button
+       android:id="@+id/joinButton"
+       style="?android:attr/buttonBarButtonStyle"
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:layout_alignParentLeft="true"
+       android:layout_centerVertical="true"
+       android:layout_margin="10dp"
+       android:text="JOIN THIS EVENT"
+       android:textColor="#10E010" />
+	
+	<RelativeLayout 
 		android:layout_width="match_parent" 
 		android:layout_height="60dip"
 		android:orientation="horizontal" 

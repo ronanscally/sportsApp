@@ -77,7 +77,7 @@
     <string-array name="events_type">
         <item>Attending</item>
         <item>Invited</item>
-        <item>Hosting</item>
+        <item>Declined</item> <!-- Should be Hosting but functionality not there -->
     </string-array>
     
     <string-array name="event_locations">

@@ -8,22 +8,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.sportsapp.SplashFragment.SkipLoginCallback;
 import com.facebook.model.OpenGraphAction;
 
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -31,7 +31,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ListEventsFragment extends Fragment {
 
@@ -58,7 +57,11 @@ public class ListEventsFragment extends Fragment {
 	
 	private ButtonPressedCallback createPressedCallback;
 	private ButtonPressedCallback viewEventPressedCallback;
-
+	
+	private static final String INVITED = "0";
+	private static final String DECLINED = "1";
+	private static final String ATTENDING = "2";
+	private String ATTEND_STATUS = ATTENDING;
 
     public interface ButtonPressedCallback {
         void onButtonPressed(String id);
@@ -85,6 +88,8 @@ public class ListEventsFragment extends Fragment {
 		Intent intent = getActivity().getIntent();
 	    UserID 		= intent.getStringExtra(R.string.EXTRA_PREFIX + "userID");
 	    getUserEvents();
+	    
+	    ATTEND_STATUS = ATTENDING;
 		
 		
 		eventUserStatusSpinner 	= (Spinner) 		view.findViewById(R.id.eventUserStatusSpinner);
@@ -109,6 +114,32 @@ public class ListEventsFragment extends Fragment {
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		// Apply the adapter to the spinner
 		eventUserStatusSpinner.setAdapter(adapter);
+		eventUserStatusSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				Log.d(TAG,"Spinner position: +" + position);
+				switch(position){
+				case 0: 
+					ATTEND_STATUS = ATTENDING;
+					break;
+				case 1: 
+					ATTEND_STATUS = INVITED;
+					break;
+				case 2: 
+					ATTEND_STATUS = DECLINED;
+					break;	
+				}
+				updateList();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+				Log.d(TAG,"Nothing Selected on Spinner");
+			}
+		});
 		
 		yourEventsButton.setVisibility(View.GONE);
 
@@ -127,26 +158,7 @@ public class ListEventsFragment extends Fragment {
             	yourEventsButton.setVisibility(View.GONE);
             	nearbyButton.setVisibility(View.VISIBLE);
             	buttonBar.setVisibility(View.VISIBLE);
-            	
-            	// Attach the events to the list
-            	noEventsText.setVisibility(View.GONE);
-        		listView.setVisibility(View.GONE);
-        		listElements = new ArrayList<BaseListElement>();
-        		if(UserEventsPresent){ // Add events to list if present
-        			for (int i = 0; i < UserEventsJSONArray.length(); i++) {
-        				try {
-        					listElements.add(new EventListElement(UserEventsJSONArray.getJSONObject(i)));
-        				} catch (JSONException e) {
-        					e.printStackTrace();
-        				}
-        			}
-        			listView.setVisibility(View.VISIBLE);
-        		}else{
-        			// Set no events element to be visible
-        			noEventsText.setVisibility(View.VISIBLE);
-        		}
-        		
-        		listView.setAdapter(new ActionListAdapter(getActivity(), R.id.eventsList, listElements));
+            	updateList();
             }
         });
 		
@@ -160,36 +172,48 @@ public class ListEventsFragment extends Fragment {
             }
         });
 		
-		noEventsText.setVisibility(View.GONE);
-		listView.setVisibility(View.GONE);
-		listElements = new ArrayList<BaseListElement>();
-		if(UserEventsPresent){ // Add events to list if present
-			for (int i = 0; i < UserEventsJSONArray.length(); i++) {
-				try {
-					listElements.add(new EventListElement(UserEventsJSONArray.getJSONObject(i)));
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-			}
-			listView.setVisibility(View.VISIBLE);
-		}else{
-			// Set no events element to be visible
-			noEventsText.setVisibility(View.VISIBLE);
-		}
+		
+        updateList();
         
         if (savedInstanceState != null) {
             for (BaseListElement listElement : listElements) {
                 listElement.restoreState(savedInstanceState);
             }
         }
-
-        listView.setAdapter(new ActionListAdapter(getActivity(), R.id.eventsList, listElements));
+        
         
 		return view;
         
         
 	}
 	
+	protected void updateList() {
+		try{
+			// Attach the events to the list
+	    	noEventsText.setVisibility(View.GONE);
+			listView.setVisibility(View.GONE);
+			listElements = new ArrayList<BaseListElement>();
+			if(UserEventsPresent){ // Add events to list if present
+				for (int i = 0; i < UserEventsJSONArray.length(); i++) {
+					try {
+						if(UserEventsJSONArray.getJSONObject(i).getString("attnStatus").equals(ATTEND_STATUS)){
+							listElements.add(new EventListElement(UserEventsJSONArray.getJSONObject(i)));
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+				listView.setVisibility(View.VISIBLE);
+			}else{
+				// Set no events element to be visible
+				noEventsText.setVisibility(View.VISIBLE);
+			}
+			listView.setAdapter(new ActionListAdapter(getActivity(), R.id.eventsList, listElements));
+		}catch(Exception e){
+			Log.e(TAG,e.toString());
+		}
+	}
+
 	protected void viewNearbyEvents() {
     	yourEventsButton.setVisibility(View.VISIBLE);
     	nearbyButton.setVisibility(View.GONE);
@@ -198,7 +222,7 @@ public class ListEventsFragment extends Fragment {
     	sendLocationToServer();
     	// Get nearby events
     	getNearbyEvents();
-    	
+//    	removeCommonEvents();
     	// Attach the events to the list
     	noEventsText.setVisibility(View.GONE);
 		listView.setVisibility(View.GONE);
@@ -217,6 +241,38 @@ public class ListEventsFragment extends Fragment {
 			noEventsText.setVisibility(View.VISIBLE);
 		}
 		listView.setAdapter(new ActionListAdapter(getActivity(), R.id.eventsList, listElements));
+	}
+
+	private void removeCommonEvents() {
+		// TODO Auto-generated method stub UserEventsJSONArray, NearbyEventsJSONArray
+		if(UserEventsJSONArray == null) return;
+		if(NearbyEventsJSONArray == null) return;
+		ArrayList<String> nearbyEventIDs = new ArrayList<String>();      
+	    for (int i = 0; i < NearbyEventsJSONArray.length(); i++){ 
+	    	try {
+				nearbyEventIDs.add(NearbyEventsJSONArray.getJSONObject(i).getString("eventID").toString());
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    } 
+	    
+	    String userEventID;
+	    int j = -1;
+	    for (int i = 0; i < NearbyEventsJSONArray.length(); i++){ 
+	    	try {
+				userEventID = NearbyEventsJSONArray.getJSONObject(i).getString("eventID").toString();
+				j = nearbyEventIDs.indexOf(userEventID);
+				if(j != -1){
+					nearbyEventIDs.remove(j);
+//					NearbyEventsJSONArray.remove(j);
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    } 
+	    
 	}
 
 	private boolean getNearbyEvents() {
@@ -258,7 +314,7 @@ public class ListEventsFragment extends Fragment {
     	if(!timeout){
     		if(responseArray == null){
         		Log.d(TAG,"Null response recieved");
-        		UserEventsJSONArray = responseArray;
+        		NearbyEventsJSONArray = responseArray;
         		NearbyEventsPresent = false;
         		return true;
         	}else{
@@ -522,7 +578,6 @@ public class ListEventsFragment extends Fragment {
 		try {
 			sportID = eventObject.getInt("sportID");
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		switch(sportID){
@@ -531,4 +586,5 @@ public class ListEventsFragment extends Fragment {
 		
 		return getResources().getDrawable(R.drawable.ic_launcher);
 	}
+	
 }

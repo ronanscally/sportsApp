@@ -231,11 +231,13 @@ public class Events extends FragmentActivity {
         }
         transaction.commit();
         if(fragmentIndex == VIEW){	// Get data for view event
-            getEventData(EventID);
+            getEventData(EventID, UserID);
 //            Log.d(TAG,"Data Got!");
 //            updateViewEvent();
         	viewEventFragment.setDisplayData(EventJSONObject);
-        	
+        }
+        if(fragmentIndex == LIST){	// Get data for view event
+        	// Update list in list events..
         }
     }
 
@@ -252,7 +254,7 @@ public class Events extends FragmentActivity {
 		EventID = eventID;
 	} 
 	
-	private boolean getEventData(String eventID) { 	
+	private boolean getEventData(String eventID, String userID) { 	
 		JSONfunctions.clearResponseBuffer();
     	String message 		= null;
     	int success 		= 0;
@@ -260,6 +262,7 @@ public class Events extends FragmentActivity {
     	JSONObject request = new JSONObject();
     	 
     	try {
+    		request.put("userID", userID);
 			request.put("eventID", eventID);
 		} catch (JSONException e1) {
 			e1.printStackTrace();

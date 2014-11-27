@@ -38,8 +38,8 @@ public class HomeFragment extends Fragment {
 	private ProfilePictureView profilePictureView;
 	private Button viewProfileButton;
 	private Button viewEventsButton;
-	private Button viewGroupsButton;
-	private Button viewInvitationsButton;
+//	private Button viewGroupsButton;
+//	private Button viewInvitationsButton;
 	private Button viewFriendsButton;
 	
 //	private MainActivity activity = null;
@@ -77,8 +77,8 @@ public class HomeFragment extends Fragment {
         profilePictureView 		= (ProfilePictureView) view.findViewById(R.id.selection_profile_pic);
         viewProfileButton 		= (Button) view.findViewById(R.id.view_profile);
         viewEventsButton 		= (Button) view.findViewById(R.id.view_events);
-        viewGroupsButton 		= (Button) view.findViewById(R.id.view_groups);
-        viewInvitationsButton 	= (Button) view.findViewById(R.id.view_invitations);
+//        viewGroupsButton 		= (Button) view.findViewById(R.id.view_groups);
+//        viewInvitationsButton 	= (Button) view.findViewById(R.id.view_invitations);
         viewFriendsButton 		= (Button) view.findViewById(R.id.view_friends);
         
         profilePictureView.setCropped(true);
@@ -111,23 +111,23 @@ public class HomeFragment extends Fragment {
             }
         });
         
-        viewGroupsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            	Intent intent = new Intent(getActivity(), ListGroupsActivity.class);
-            	intent.putExtra(R.string.EXTRA_PREFIX + "userID", UserID);
-            	startActivity(intent);
-            }
-        });
+//        viewGroupsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//            	Intent intent = new Intent(getActivity(), ListGroupsActivity.class);
+//            	intent.putExtra(R.string.EXTRA_PREFIX + "userID", UserID);
+//            	startActivity(intent);
+//            }
+//        });
         
-        viewInvitationsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            	Intent intent = new Intent(getActivity(), ListEventsActivity.class);
-            	intent.putExtra(R.string.EXTRA_PREFIX + "userID", UserID);
-            	startActivity(intent);
-            }
-        });
+//        viewInvitationsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//            	Intent intent = new Intent(getActivity(), ListEventsActivity.class);
+//            	intent.putExtra(R.string.EXTRA_PREFIX + "userID", UserID);
+//            	startActivity(intent);
+//            }
+//        });
         
         viewFriendsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -223,7 +223,6 @@ public class HomeFragment extends Fragment {
                 if (session == Session.getActiveSession()) {
                     if (user != null) {
                     	UserID = user.getId();
-						// TODO remove userIdent
                     	userIdent = UserID;
                 		sendRegistrationIdToBackend();
 						if (regid.isEmpty()) {

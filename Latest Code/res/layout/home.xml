@@ -44,7 +44,7 @@
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:text="@string/view_events" />
-     
+     <!-- 
      <Button
          android:id="@+id/view_groups"
          android:layout_width="match_parent"
@@ -56,7 +56,7 @@
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:text="@string/view_invitations" />
-     
+      -->
      <Button
          android:id="@+id/view_friends"
          android:layout_width="match_parent"

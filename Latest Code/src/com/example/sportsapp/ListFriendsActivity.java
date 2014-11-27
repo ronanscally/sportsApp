@@ -48,108 +48,52 @@ public class ListFriendsActivity extends ActionBarActivity {
 	String message 		= null;
 	int success 		= 0;
 	
-	/*
-	private JSONArray FriendsJSONArray;
-	private boolean FriendsPresent = false;
-	
-	private ListView listView;
-	private TextView noEventsText;
-	private List<BaseListElement> listElements;
-	*/
-	
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		//setContentView(R.layout.activity_list_friends);
 		setContentView(R.layout.activity_list_friends);
 		
 		Intent intent = getIntent();
 		UserID 	= intent.getStringExtra(R.string.EXTRA_PREFIX + "userID");
-		
-		//ListType = "Friends";
-		
-		
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		
 		Friends = (ListView) findViewById(R.id.listView);
 		
+		updateFriends();
+	}
 		
+	
+	@Override
+	protected void onRestart (){
+		super.onRestart();
+		updateFriends();
+	}
+	
+	
+	private void updateFriends() {
+		FriendsJSONArray = null;
+		listdata = new ArrayList<String>();
 		getFriends();
-		
-		
 		if (FriendsJSONArray != null) { 
 			   for (int i=0; i<FriendsJSONArray.length(); i++){ 
 			    try {
 			    	JSON_data = FriendsJSONArray.getJSONObject(i);
 			    	String lastname = JSON_data.getString("lastName");
 			    	String firstname = JSON_data.getString("firstName");
-			    	
-			    	
 			    	String name = (firstname+" "+lastname);
-			    	
-			    	
 			    	listdata.add(name);
-			    	
-			    	Log.d(TAG,"name: " + name);
-			    	Log.d(TAG,"listdata: " + listdata);
-			    	
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			   } 
 			}
-		
-		Log.d(TAG,"listdata " + Friends);
-		
-
-		
 		final StableArrayAdapter adapter = new StableArrayAdapter(this,
 	            android.R.layout.simple_list_item_1, listdata);
-		
-		
-		
 		Friends.setAdapter(adapter);
-		
-		
-		
-		/*
-		
-		Friends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View view,
-                int position, long id) {
-              final String item = (String) parent.getItemAtPosition(position);
-              view.animate().setDuration(2000).alpha(0)
-                  .withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                      listdata.remove(item);
-                      adapter.notifyDataSetChanged();
-                      view.setAlpha(1);
-                    }
-                  });
-            }
-            
-            
-
-          });
-		*/
-		
 	}
-		
-	
-	
-	
-	
-	
-	
-	//Functions
-	
-	
+
+
+
 	private class StableArrayAdapter extends ArrayAdapter<String> {
 
 	    HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
@@ -163,110 +107,86 @@ public class ListFriendsActivity extends ActionBarActivity {
 	    }
 	}
 		
+	
+	private boolean getFriends() {
+    	JSONfunctions.clearResponseBuffer();
 		
-		
-	
-	
-	
-	
-		
-		private boolean getFriends() {
-	    	JSONfunctions.clearResponseBuffer();
-			
-	    	
-	    	JSONObject request = new JSONObject();
-	    	 
-	    	try {
-				request.put("userID", UserID);
-			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-	    	Log.d(TAG,"Request: " + request.toString());
-	    	
-	    	JSONfunctions.setRequestObject(request);
-	    	new JSONfunctions().execute(getString(R.string.listFriends));
-
-	    	long timeStart = System.currentTimeMillis();
-	    	boolean timeout = false;
-	    	int timeoutSeconds = 10;
-	    	JSONArray responseArray = null;
-	    	while (true){
-	    		if(timeStart + timeoutSeconds*1000 < System.currentTimeMillis()){	// Timeout (10seconds...)
-	    			Log.d("Server","No server response.");
-	    			Log.d("Server","Timeout triggered after " + timeoutSeconds + " seconds");
-	    			timeout = true;
-	    			break;
-	    		}
-	    		if(JSONfunctions.checkNewResponse()){
-	    			responseArray = JSONfunctions.getResponseArray();
-	    			break;
-	    		}
-	    	}
-	    	
-	    	
-	    	
-	    	
-	    	if(!timeout){
-	    		if(responseArray == null){
-	        		Log.d(TAG,"Null response recieved");
-	        		FriendsJSONArray = responseArray;
-	        		FriendsPresent = false;
-	        		return true;
-	        	}else{
-	        		Log.d(TAG,responseArray.toString());
-		        	JSONObject responseObject = null;
-		    		try {
-		    			responseObject = responseArray.getJSONObject(0);
-		    		} catch (JSONException e1) {
-		    			// TODO Auto-generated catch block
-		    			e1.printStackTrace();
-		    		}
-			    	try {
-			    		success 	= responseObject.getInt("success");
-			    		message 	= responseObject.getString("message");
-			    	} catch (JSONException e) {
-			    		e.printStackTrace();
-			    	}
-			    	
-			    	if(success == 1) // Friends exists, get data
-			    	{
-			    		FriendsJSONArray = responseArray;
-			    		FriendsPresent = true;
-			    	}else{
-			    		// TODO if events doesn't exist.
-			    		return false;
-			    	}
-			    	return true;
-	        	}
-	    	}
-			return false;
+    	
+    	JSONObject request = new JSONObject();
+    	 
+    	try {
+			request.put("userID", UserID);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-		
-		
-		
-		
-		
-		
-		
-		
+    	Log.d(TAG,"Request: " + request.toString());
+    	
+    	JSONfunctions.setRequestObject(request);
+    	new JSONfunctions().execute(getString(R.string.listFriends));
 
+    	long timeStart = System.currentTimeMillis();
+    	boolean timeout = false;
+    	int timeoutSeconds = 10;
+    	JSONArray responseArray = null;
+    	while (true){
+    		if(timeStart + timeoutSeconds*1000 < System.currentTimeMillis()){	// Timeout (10seconds...)
+    			Log.d("Server","No server response.");
+    			Log.d("Server","Timeout triggered after " + timeoutSeconds + " seconds");
+    			timeout = true;
+    			break;
+    		}
+    		if(JSONfunctions.checkNewResponse()){
+    			responseArray = JSONfunctions.getResponseArray();
+    			break;
+    		}
+    	}
+    	
+    	
+    	
+    	
+    	if(!timeout){
+    		if(responseArray == null){
+        		Log.d(TAG,"Null response recieved");
+        		FriendsJSONArray = responseArray;
+        		FriendsPresent = false;
+        		return true;
+        	}else{
+        		Log.d(TAG,responseArray.toString());
+	        	JSONObject responseObject = null;
+	    		try {
+	    			responseObject = responseArray.getJSONObject(0);
+	    		} catch (JSONException e1) {
+	    			// TODO Auto-generated catch block
+	    			e1.printStackTrace();
+	    		}
+		    	try {
+		    		success 	= responseObject.getInt("success");
+		    		message 	= responseObject.getString("message");
+		    	} catch (JSONException e) {
+		    		e.printStackTrace();
+		    	}
+		    	
+		    	if(success == 1) // Friends exists, get data
+		    	{
+		    		FriendsJSONArray = responseArray;
+		    		FriendsPresent = true;
+		    	}else{
+		    		// TODO if events doesn't exist.
+		    		return false;
+		    	}
+		    	return true;
+        	}
+    	}
+		return false;
+	}
+		
 	
 	public void AddAFriendActivity (View view) {
 		Log.d("ListFriendsActivity", "AddaFriendActivity called from List Friends Activity");
 		Intent intent = new Intent(this, AddAFriendActivity.class);
-		
 		intent.putExtra("UserID", UserID);
-		Log.d(TAG,"Check intent: " + intent);
-    	//intent.putExtra("longitude", longitude);
-    	//intent.putExtra("latitude", latitude);
-    	//Log.d("Intent",intent.toString());
-		
     	startActivity(intent);
-	
 	}
-	
-	
-
 	
 }

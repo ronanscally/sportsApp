@@ -52,16 +52,6 @@ public class AddAFriendActivity extends ActionBarActivity {
 	String message 		= null;
 	int success 		= 0;
 	
-	/*
-	private JSONArray FriendsJSONArray;
-	private boolean FriendsPresent = false;
-	
-	private ListView listView;
-	private TextView noEventsText;
-	private List<BaseListElement> listElements;
-	*/
-	
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -82,9 +72,6 @@ public class AddAFriendActivity extends ActionBarActivity {
 			//Log.d("LOG_TAG", "long" + longitude);
 			
 		}
-		
-		
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		AddFriends = (ListView) findViewById(R.id.listView);
 		
@@ -161,14 +148,7 @@ public class AddAFriendActivity extends ActionBarActivity {
 		
 	}
 		
-	
-	
-	
-	
-	
-	
-	//Functions
-	
+
 	
 	private class StableArrayAdapter extends ArrayAdapter<String> {
 
@@ -182,90 +162,83 @@ public class AddAFriendActivity extends ActionBarActivity {
 	      }
 	    }
 	}
-		
-		
-		
-	
-	
-	
 	
 		
-		private boolean getFriends() {
-	    	JSONfunctions.clearResponseBuffer();
-			
-	    	
-	    	JSONObject request = new JSONObject();
-	    	 
-	    	try {
-				request.put("userID", UserID);
-			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-	    	Log.d(TAG,"Request: " + request.toString());
-	    	
-	    	JSONfunctions.setRequestObject(request);
-	    	new JSONfunctions().execute(getString(R.string.otherUsers));
-
-	    	long timeStart = System.currentTimeMillis();
-	    	boolean timeout = false;
-	    	int timeoutSeconds = 10;
-	    	JSONArray responseArray = null;
-	    	while (true){
-	    		if(timeStart + timeoutSeconds*1000 < System.currentTimeMillis()){	// Timeout (10seconds...)
-	    			Log.d("Server","No server response.");
-	    			Log.d("Server","Timeout triggered after " + timeoutSeconds + " seconds");
-	    			timeout = true;
-	    			break;
-	    		}
-	    		if(JSONfunctions.checkNewResponse()){
-	    			responseArray = JSONfunctions.getResponseArray();
-	    			break;
-	    		}
-	    	}
-	    	
-	    	
-	    	
-	    	
-	    	if(!timeout){
-	    		if(responseArray == null){
-	        		Log.d(TAG,"Null response recieved");
-	        		AddFriendsJSONArray = responseArray;
-	        		FriendsPresent = false;
-	        		return true;
-	        	}else{
-	        		Log.d(TAG,responseArray.toString());
-		        	JSONObject responseObject = null;
-		    		try {
-		    			responseObject = responseArray.getJSONObject(0);
-		    		} catch (JSONException e1) {
-		    			// TODO Auto-generated catch block
-		    			e1.printStackTrace();
-		    		}
-			    	try {
-			    		success 	= responseObject.getInt("success");
-			    		message 	= responseObject.getString("message");
-			    	} catch (JSONException e) {
-			    		e.printStackTrace();
-			    	}
-			    	
-			    	if(success == 1) // Friends exists, get data
-			    	{
-			    		AddFriendsJSONArray = responseArray;
-			    		FriendsPresent = true;
-			    	}else{
-			    		// TODO if events doesn't exist.
-			    		return false;
-			    	}
-			    	return true;
-	        	}
-	    	}
-			return false;
+	private boolean getFriends() {
+    	JSONfunctions.clearResponseBuffer();
+		
+    	
+    	JSONObject request = new JSONObject();
+    	 
+    	try {
+			request.put("userID", UserID);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-		
-		
-		
-		private void UpdateFriends() {
+    	Log.d(TAG,"Request: " + request.toString());
+    	
+    	JSONfunctions.setRequestObject(request);
+    	new JSONfunctions().execute(getString(R.string.otherUsers));
+
+    	long timeStart = System.currentTimeMillis();
+    	boolean timeout = false;
+    	int timeoutSeconds = 10;
+    	JSONArray responseArray = null;
+    	while (true){
+    		if(timeStart + timeoutSeconds*1000 < System.currentTimeMillis()){	// Timeout (10seconds...)
+    			Log.d("Server","No server response.");
+    			Log.d("Server","Timeout triggered after " + timeoutSeconds + " seconds");
+    			timeout = true;
+    			break;
+    		}
+    		if(JSONfunctions.checkNewResponse()){
+    			responseArray = JSONfunctions.getResponseArray();
+    			break;
+    		}
+    	}
+    	
+    	
+    	
+    	
+    	if(!timeout){
+    		if(responseArray == null){
+        		Log.d(TAG,"Null response recieved");
+        		AddFriendsJSONArray = responseArray;
+        		FriendsPresent = false;
+        		return true;
+        	}else{
+        		Log.d(TAG,responseArray.toString());
+	        	JSONObject responseObject = null;
+	    		try {
+	    			responseObject = responseArray.getJSONObject(0);
+	    		} catch (JSONException e1) {
+	    			// TODO Auto-generated catch block
+	    			e1.printStackTrace();
+	    		}
+		    	try {
+		    		success 	= responseObject.getInt("success");
+		    		message 	= responseObject.getString("message");
+		    	} catch (JSONException e) {
+		    		e.printStackTrace();
+		    	}
+		    	
+		    	if(success == 1) // Friends exists, get data
+		    	{
+		    		AddFriendsJSONArray = responseArray;
+		    		FriendsPresent = true;
+		    	}else{
+		    		// TODO if events doesn't exist.
+		    		return false;
+		    	}
+		    	return true;
+        	}
+    	}
+		return false;
+	}
+	
+	
+	private void UpdateFriends() {
 		      // Your implementation here.
 		    	try{
 		    		Log.d(TAG,"addFriend");
@@ -300,13 +273,5 @@ public class AddAFriendActivity extends ActionBarActivity {
 		    		
 		    	}
 		    }
-		
-		
-		
-		
-
-	
-	
-
 	
 }
