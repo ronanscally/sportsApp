@@ -5,34 +5,32 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical">
 	
-    <!-- 
-	<RelativeLayout 
+    <RelativeLayout 
 		android:layout_width="match_parent"
 		android:layout_height="60dp"
 		android:background="@color/sportsapp_background">
 		
 		<ImageView
-			android:id="@+id/image_title"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_margin="16dp"
 			android:layout_centerInParent="true"
 			android:scaleType="fitCenter"
-			android:src="@drawable/logo"
-			android:contentDescription="@string/profile_picture"/>
+			android:src="@drawable/banner"
+			android:contentDescription="banner"/>
 		
-        <com.facebook.widget.ProfilePictureView
+        <Button
             android:id="@+id/selection_profile_pic"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:gravity="right|center_vertical"
-            android:layout_margin="10dp"
-            facebook:preset_size="small" />
+            android:layout_margin="10dp" 
+            android:text="Back" 
+            android:onClick="endActivity"/>
         
 	</RelativeLayout>
-	  -->
 	  
     <Button 
 		    android:id="@+id/nearbyButton" 

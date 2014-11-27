@@ -23,7 +23,7 @@ public class EditProfileActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_profile);
 		
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // If your minSdkVersion is 11 or higher, instead use:
         // getActionBar().setDisplayHomeAsUpEnabled(true);
         
@@ -156,6 +156,9 @@ public class EditProfileActivity extends ActionBarActivity {
         // Close edit
 		finish();
     }
-	    
+	
+	public void endActivity(View view) {
+		finish();
+	}
 	    
 }

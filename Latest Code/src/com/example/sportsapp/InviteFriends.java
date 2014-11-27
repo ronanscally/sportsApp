@@ -260,4 +260,8 @@ public class InviteFriends extends ActionBarActivity {
     	}
 		return false;
 	}
+	
+	public void endActivity(View view) {
+		finish();
+	}
 }

@@ -19,6 +19,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 
 public class Events extends FragmentActivity {
@@ -37,6 +38,7 @@ public class Events extends FragmentActivity {
     private Fragment[] fragments = new Fragment[FRAGMENT_COUNT];
 
 	private ViewEventFragment viewEventFragment;
+	private ListEventsFragment listEventsFragment;
 	
     private MenuItem settings;
 	private boolean isResumed = false;
@@ -73,7 +75,7 @@ public class Events extends FragmentActivity {
         
         // Find fragments
         FragmentManager fm = getSupportFragmentManager();
-        ListEventsFragment listEventsFragment = (ListEventsFragment) fm.findFragmentById(R.id.listFragment);
+        listEventsFragment = (ListEventsFragment) fm.findFragmentById(R.id.listFragment);
         viewEventFragment = (ViewEventFragment) fm.findFragmentById(R.id.viewFragment);
         CreateEventFragment createEventFragment = (CreateEventFragment) fm.findFragmentById(R.id.createFragment);
         fragments[LIST] = listEventsFragment;
@@ -238,6 +240,9 @@ public class Events extends FragmentActivity {
         }
         if(fragmentIndex == LIST){	// Get data for view event
         	// Update list in list events..
+        	Log.d(TAG,"Attempting to update the list events");
+        	listEventsFragment.getUserEvents();
+        	listEventsFragment.updateList();
         }
     }
 
@@ -322,5 +327,9 @@ public class Events extends FragmentActivity {
 	    	return true;
     	}
 		return false;
+	}
+	
+	public void endActivity(View view) {
+		finish();
 	}
 }

@@ -189,4 +189,8 @@ public class ListFriendsActivity extends ActionBarActivity {
     	startActivity(intent);
 	}
 	
+	public void endActivity(View view) {
+		finish();
+	}
+	
 }

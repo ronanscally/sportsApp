@@ -35,7 +35,6 @@ import android.widget.TextView;
 
 public class HomeFragment extends Fragment {
 	private static final String TAG = "HomeFragment";
-	private ProfilePictureView profilePictureView;
 	private Button viewProfileButton;
 	private Button viewEventsButton;
 //	private Button viewGroupsButton;
@@ -67,7 +66,13 @@ public class HomeFragment extends Fragment {
             onSessionStateChange(session, state, exception);
         }
     };
-	
+
+    private ProfilePicCallback profilePicCallback;
+	private ProfilePictureView profilePictureView;
+
+   public interface ProfilePicCallback {
+       void onProfilePicPressed();
+   }
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,7 +94,14 @@ public class HomeFragment extends Fragment {
             makeMeRequest(session);
         }
         
-        
+        profilePictureView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (profilePicCallback != null) {
+                	profilePicCallback.onProfilePicPressed();
+                }
+            }
+        });
         
         viewProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,6 +227,10 @@ public class HomeFragment extends Fragment {
             profilePictureView.setProfileId(null);
         }
     }
+	
+	public void setProfilePicCallback(ProfilePicCallback callback) {
+       	profilePicCallback = callback;
+       }
 	
 	private void makeMeRequest(final Session session) {
         Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {

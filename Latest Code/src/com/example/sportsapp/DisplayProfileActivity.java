@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -30,7 +32,9 @@ public class DisplayProfileActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_display_profile);
+        setContentView(R.layout.activity_display_profile); 
+		
+    	
 		
 		if (savedInstanceState != null) {
 			UserID 		= savedInstanceState.getString("UserID");
@@ -85,7 +89,7 @@ public class DisplayProfileActivity extends ActionBarActivity {
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // If your minSdkVersion is 11 or higher, instead use:
         // getActionBar().setDisplayHomeAsUpEnabled(true);
-
+    	
 		
 	}
 
@@ -102,13 +106,6 @@ public class DisplayProfileActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-	    // Inflate the menu items for use in the action bar
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.main_activity_actions, menu);
-	    return super.onCreateOptionsMenu(menu);
-	}
 	
 	public boolean getProfileData() {
 		
@@ -228,6 +225,8 @@ public class DisplayProfileActivity extends ActionBarActivity {
 	    super.onSaveInstanceState(savedInstanceState);
 	}
 	
-	    
+	public void endActivity(View view) {
+		finish();
+	}
 	    
 }

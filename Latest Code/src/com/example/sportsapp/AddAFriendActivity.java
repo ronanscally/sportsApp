@@ -239,39 +239,43 @@ public class AddAFriendActivity extends ActionBarActivity {
 	
 	
 	private void UpdateFriends() {
-		      // Your implementation here.
-		    	try{
-		    		Log.d(TAG,"addFriend");
-		        	JSONObject request = new JSONObject();
-		        	request.put("userID", UserID);
-		        	request.put("friendID", addid);
-		    		//request.put("deviceID", regid);
-		    		// Send to server
-		        	JSONfunctions.setRequestObject(request);
-		        	String add_friend = getString(R.string.addFriend);
-		        	new JSONfunctions().execute(add_friend);
-		        	
-		            long timeStart = System.currentTimeMillis();
-		        	int timeoutSeconds = 10;
-		        	while (true){
-		        		if(timeStart + timeoutSeconds*1000 < System.currentTimeMillis()){	// Timeout (10seconds...)
-		        			Log.d(TAG,"No server response.");
-		        			Log.d(TAG,"Timeout triggered after " + timeoutSeconds + " seconds");
-		        			break;
-		        		}
-		        		if(JSONfunctions.checkNewResponse()){
-		        			break;
-		        		}
-		        	}
-		        	Log.d(TAG,"addFriend Finished");
-		    	}catch(JSONException e){
-		    		System.out.println("Send Location to server");
-		    		e.printStackTrace();
-		    	}catch(Exception e){
-		    		System.out.println("General Error");
-		    		e.printStackTrace();
-		    		
-		    	}
-		    }
+      // Your implementation here.
+    	try{
+    		Log.d(TAG,"addFriend");
+        	JSONObject request = new JSONObject();
+        	request.put("userID", UserID);
+        	request.put("friendID", addid);
+    		//request.put("deviceID", regid);
+    		// Send to server
+        	JSONfunctions.setRequestObject(request);
+        	String add_friend = getString(R.string.addFriend);
+        	new JSONfunctions().execute(add_friend);
+        	
+            long timeStart = System.currentTimeMillis();
+        	int timeoutSeconds = 10;
+        	while (true){
+        		if(timeStart + timeoutSeconds*1000 < System.currentTimeMillis()){	// Timeout (10seconds...)
+        			Log.d(TAG,"No server response.");
+        			Log.d(TAG,"Timeout triggered after " + timeoutSeconds + " seconds");
+        			break;
+        		}
+        		if(JSONfunctions.checkNewResponse()){
+        			break;
+        		}
+        	}
+        	Log.d(TAG,"addFriend Finished");
+    	}catch(JSONException e){
+    		System.out.println("Send Location to server");
+    		e.printStackTrace();
+    	}catch(Exception e){
+    		System.out.println("General Error");
+    		e.printStackTrace();
+    		
+    	}
+    }
+	
+	public void endActivity(View view) {
+		finish();
+	}
 	
 }

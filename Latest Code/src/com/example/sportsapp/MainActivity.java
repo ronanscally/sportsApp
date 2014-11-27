@@ -104,10 +104,10 @@ public class MainActivity extends FragmentActivity {
         
         // Find fragments
         FragmentManager fm = getSupportFragmentManager();
-        SplashFragment splashFragment = (SplashFragment) fm.findFragmentById(R.id.splashFragment);
         NewUserFragment newUserFragment = (NewUserFragment) fm.findFragmentById(R.id.newUserFragment);
-        fragments[SPLASH] = splashFragment;
-        fragments[HOME] = fm.findFragmentById(R.id.homeFragment);
+        HomeFragment homeFragment = (HomeFragment) fm.findFragmentById(R.id.homeFragment);
+        fragments[SPLASH] = fm.findFragmentById(R.id.splashFragment);
+        fragments[HOME] = homeFragment;
         fragments[NEW_USER] = newUserFragment;
         fragments[SETTINGS] = fm.findFragmentById(R.id.userSettingsFragment);
         
@@ -118,18 +118,17 @@ public class MainActivity extends FragmentActivity {
         }
         transaction.commit();
         
-        splashFragment.setSkipLoginCallback(new SplashFragment.SkipLoginCallback() {
-            @Override
-            public void onSkipLoginPressed() {
-//                userSkippedLogin = true;
-                showFragment(HOME, false);
-            }
-        });
-        
         newUserFragment.setProceedButtonCallback(new NewUserFragment.ProceedButtonCallback() {
             @Override
             public void onProceedButtonPressed() {
                 showFragment(HOME, false);
+            }
+        });
+        
+        homeFragment.setProfilePicCallback(new HomeFragment.ProfilePicCallback() {
+            @Override
+            public void onProfilePicPressed() {
+                showSettingsFragment();
             }
         });
         
@@ -416,7 +415,7 @@ public class MainActivity extends FragmentActivity {
     	String dob = user.getBirthday();
     	Log.d(TAG,"DOB: " + dob);
     	if(dob == null){
-    		dob = "1970-01-01";
+    		dob = "01/01/1970";
     		Log.d(TAG,"Setting DOB to: " + dob);
     	}
     	

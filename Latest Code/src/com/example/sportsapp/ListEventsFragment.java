@@ -158,6 +158,7 @@ public class ListEventsFragment extends Fragment {
             	yourEventsButton.setVisibility(View.GONE);
             	nearbyButton.setVisibility(View.VISIBLE);
             	buttonBar.setVisibility(View.VISIBLE);
+            	getUserEvents();
             	updateList();
             }
         });
@@ -499,7 +500,7 @@ public class ListEventsFragment extends Fragment {
 	}
 	
 	
-	private boolean getUserEvents() {
+	public boolean getUserEvents() {
     	JSONfunctions.clearResponseBuffer();
 		
     	String message 		= null;
@@ -582,6 +583,29 @@ public class ListEventsFragment extends Fragment {
 		}
 		switch(sportID){
 		case 1: return getResources().getDrawable(R.drawable.soccer);
+		case 2: return getResources().getDrawable(R.drawable.tennis);
+		case 3: return getResources().getDrawable(R.drawable.golf);
+		case 4: return getResources().getDrawable(R.drawable.rugby);
+		case 5: return getResources().getDrawable(R.drawable.hurling);
+		case 6: return getResources().getDrawable(R.drawable.gaelicfootball);
+		case 7: return getResources().getDrawable(R.drawable.badminton);
+		case 8: return getResources().getDrawable(R.drawable.squash);
+		case 9: return getResources().getDrawable(R.drawable.americanfootball);
+		case 10: return getResources().getDrawable(R.drawable.hockey);
+		case 11: return getResources().getDrawable(R.drawable.ultimatefrisbee);
+		case 12: return getResources().getDrawable(R.drawable.snooker);
+		case 13: return getResources().getDrawable(R.drawable.darts);
+		case 14: return getResources().getDrawable(R.drawable.icehockey);
+		case 15: return getResources().getDrawable(R.drawable.basketball);
+		case 16: return getResources().getDrawable(R.drawable.cricket);
+		case 17: return getResources().getDrawable(R.drawable.baseball);
+		case 18: return getResources().getDrawable(R.drawable.handball);
+		case 19: return getResources().getDrawable(R.drawable.athletics);
+		case 20: return getResources().getDrawable(R.drawable.volleyball);
+		case 21: return getResources().getDrawable(R.drawable.sailing);
+		case 22: return getResources().getDrawable(R.drawable.surfing);
+		case 23: return getResources().getDrawable(R.drawable.swimming);
+		case 24: return getResources().getDrawable(R.drawable.cycling);
 		}
 		
 		return getResources().getDrawable(R.drawable.ic_launcher);
