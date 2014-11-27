@@ -137,7 +137,7 @@ public class MainActivity extends FragmentActivity {
 		 
 		double latitude =  gps.getLatitude();
 		double longitude = gps.getLongitude();
-		Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+//		Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
 		//gps.showSettingsAlert();
 		
 		//setContentView(R.layout.gcm);
