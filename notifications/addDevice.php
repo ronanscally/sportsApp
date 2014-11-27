@@ -24,6 +24,8 @@
         $deviceID = $decoded['deviceID'];
 
         // mySQL add user to database
+        $query = 'DELETE FROM `userDevices` WHERE device=\''.$deviceID.'\'';
+        $result = mysqli_query($connection->myconn, $query);
         $query = 'INSERT INTO userDevices(userID, device) VALUES ('.$userID.',\''.$deviceID.'\')';
         $result = mysqli_query($connection->myconn, $query);
 

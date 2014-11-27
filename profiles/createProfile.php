@@ -26,7 +26,7 @@
         $dob        = $decoded['dob'];
 
         // mySQL add user to database
-        $query  = 'INSERT INTO profiles(userID, firstName, lastName, dob) VALUES ('.$userID.',\''.$firstName.'\',\''.$lastName.'\',\''.$dob.'\');';
+        $query  = 'INSERT INTO profiles(userID, firstName, lastName, dob) VALUES ('.$userID.',\''.$firstName.'\',\''.$lastName.'\',STR_TO_DATE(\''.$dob.'\', \'%m/%d/%Y\'));';
 
         $result = mysqli_query($connection->myconn, $query);
 
